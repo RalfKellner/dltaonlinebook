@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '02_frequency_dictionary_models';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -364,6 +366,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-based-modeling">Frequency based modeling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#similarity-measures">Similarity measures</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dictionary-based-modeling">Dictionary based modeling</a></li>
 </ul>
             </nav>
@@ -378,8 +381,1428 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="text-analysis-without-trained-models">
 <h1>Text analysis without trained models<a class="headerlink" href="#text-analysis-without-trained-models" title="Permalink to this heading">#</a></h1>
+<p>Later in the course, we either use pre-trained models or models we trained ourselves for a corpus. Trained means, a statistical model is used for text analysis whose output depends on parameters that impact the model output. Before we use these more advanced techniques, we want to start with simpler approaches. Looking at our corpus, we want to aggregate the information in each document, usually by transforming it into a numerical representation.</p>
 <section id="frequency-based-modeling">
 <h2>Frequency based modeling<a class="headerlink" href="#frequency-based-modeling" title="Permalink to this heading">#</a></h2>
+<p>One of the easiest way to do this is to count the number of occurrences for every term in the document which ist listed in the lexicon. This approach is called bag-of-words which describes the fact we ignore the relationship of all words to each other and, hereby, loose semantic information. Let the number of documents be <span class="math notranslate nohighlight">\(n\)</span> and the number of terms in the lexicon <span class="math notranslate nohighlight">\(d\)</span>, the corpus can be transformed to a document-term matrix <span class="math notranslate nohighlight">\(D\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+D = 
+\begin{pmatrix}
+x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1d} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{n1} &amp; x_{n2} &amp; \cdots &amp; x_{nd} \\
+\end{pmatrix}
+\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(x_{ij}\)</span> describing the number of term <span class="math notranslate nohighlight">\(j\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>. For larger corpora, <span class="math notranslate nohighlight">\(d\)</span> is a large number so <span class="math notranslate nohighlight">\(D\)</span> is a high-dimensional and, typically, sparse matrix which means the matrix has many zeros and only a few non-zero entries. A few options exist which can help dealing with this issue. One is the removal of stopwords. Other options are to exclude words with little and very high frequency or to exclude words with very little or high document occurrence. However, these measures need to be evaluated carefully, because sometimes words with little occurrence or frequency might provide more information than words with high occurrence of frequency. The bag-of-words approach can be conducted quite easily with the CountVectorizer class of the sklearn package. See a little demonstration in the following cells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">gensim.utils</span> <span class="kn">import</span> <span class="n">simple_preprocess</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># load Apple&#39;s 10-K filings</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;../data/dlta_texts.db&quot;</span><span class="p">)</span>
+<span class="n">sql_query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM filings;&quot;</span>
+<span class="n">df_filings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql_query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">apple_filings</span> <span class="o">=</span> <span class="n">df_filings</span><span class="p">[</span><span class="n">df_filings</span><span class="o">.</span><span class="n">ticker</span> <span class="o">==</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">]</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">apple_filings</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>accessionNumber</th>
+      <th>filingDate</th>
+      <th>reportDate</th>
+      <th>acceptanceDateTime</th>
+      <th>act</th>
+      <th>form</th>
+      <th>fileNumber</th>
+      <th>filmNumber</th>
+      <th>items</th>
+      <th>size</th>
+      <th>isXBRL</th>
+      <th>isInlineXBRL</th>
+      <th>primaryDocument</th>
+      <th>primaryDocDescription</th>
+      <th>ticker</th>
+      <th>cik</th>
+      <th>text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0000320193-22-000108</td>
+      <td>2022-10-28</td>
+      <td>2022-09-24</td>
+      <td>2022-10-27T18:01:14.000Z</td>
+      <td>34</td>
+      <td>10-K</td>
+      <td>001-36743</td>
+      <td>221338448</td>
+      <td></td>
+      <td>10332356</td>
+      <td>1</td>
+      <td>1</td>
+      <td>aapl-20220924.htm</td>
+      <td>10-K</td>
+      <td>AAPL</td>
+      <td>0000320193</td>
+      <td>10-K\n 1\n aapl-20220924.htm\n 10-K\n \n \n \n...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0000320193-21-000105</td>
+      <td>2021-10-29</td>
+      <td>2021-09-25</td>
+      <td>2021-10-28T18:04:28.000Z</td>
+      <td>34</td>
+      <td>10-K</td>
+      <td>001-36743</td>
+      <td>211359752</td>
+      <td></td>
+      <td>10502096</td>
+      <td>1</td>
+      <td>1</td>
+      <td>aapl-20210925.htm</td>
+      <td>10-K</td>
+      <td>AAPL</td>
+      <td>0000320193</td>
+      <td>10-K\n 1\n aapl-20210925.htm\n 10-K\n \n \n \n...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># a first check regarding the length of these reports</span>
+<span class="c1"># import raw text</span>
+<span class="n">raw_reports</span> <span class="o">=</span> <span class="n">apple_filings</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">values</span>
+<span class="c1"># preprocess each report</span>
+<span class="n">processed_reports</span> <span class="o">=</span> <span class="p">[</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">raw_reports</span><span class="p">]</span>
+<span class="c1"># count the number of tokens for each report</span>
+<span class="n">nbr_words_per_report</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">processed_reports</span><span class="p">]</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_filings</span><span class="p">[</span><span class="n">df_filings</span><span class="o">.</span><span class="n">ticker</span> <span class="o">==</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">filingDate</span><span class="p">)</span>
+<span class="n">words_per_report</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">nbr_words_per_report</span><span class="p">)</span>
+
+<span class="c1"># visualize the number of tokens per Apple report over time</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">words_per_report</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Number of tokens per report for Apple&quot;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/abaee84acdc4d9de03d25859a2a49d98d23939b7c381d5e18c5db9a2457e98d6.png" src="_images/abaee84acdc4d9de03d25859a2a49d98d23939b7c381d5e18c5db9a2457e98d6.png" />
+</div>
+</div>
+<p>Using the CountVectorizer with its default settings:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the bag-of-words with default settings</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="c1"># the output is a sparse matrix, the first dimension are the number of reports, the second dimension is the number of terms</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raw_reports</span><span class="p">)</span>
+<span class="c1"># let us take a look at the first reports</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">bow_default</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">feature_names</span><span class="p">)</span>
+<span class="n">bow_default</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aac</th>
+      <th>aad</th>
+      <th>aapl</th>
+      <th>abandoned</th>
+      <th>abbett</th>
+      <th>abilities</th>
+      <th>ability</th>
+      <th>able</th>
+      <th>abnormal</th>
+      <th>abnormally</th>
+      <th>...</th>
+      <th>yo</th>
+      <th>york</th>
+      <th>yosemite</th>
+      <th>young</th>
+      <th>youtube</th>
+      <th>zayante</th>
+      <th>zero</th>
+      <th>zip</th>
+      <th>zones</th>
+      <th>zoom</th>
+    </tr>
+    <tr>
+      <th>filingDate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-10-28</th>
+      <td>0</td>
+      <td>0</td>
+      <td>109</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>27</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2021-10-29</th>
+      <td>0</td>
+      <td>0</td>
+      <td>130</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2020-10-30</th>
+      <td>0</td>
+      <td>0</td>
+      <td>152</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>22</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2019-10-31</th>
+      <td>0</td>
+      <td>0</td>
+      <td>116</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>19</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2018-11-05</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>23</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 6728 columns</p>
+</div></div></div>
+</div>
+<p>Using the CountVectorizer and deleting stopwords:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.parsing.preprocessing</span> <span class="kn">import</span> <span class="n">STOPWORDS</span>
+
+<span class="c1"># import the stopword list from the gensim package</span>
+<span class="n">stopword_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+<span class="n">stopword_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+<span class="c1"># create the bag-of-words</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopword_list</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raw_reports</span><span class="p">)</span>
+<span class="c1"># let us take a look at the first reports</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">bow_wo_stopwords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">feature_names</span><span class="p">)</span>
+<span class="n">bow_wo_stopwords</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aac</th>
+      <th>aad</th>
+      <th>aapl</th>
+      <th>abandoned</th>
+      <th>abbett</th>
+      <th>abilities</th>
+      <th>ability</th>
+      <th>able</th>
+      <th>abnormal</th>
+      <th>abnormally</th>
+      <th>...</th>
+      <th>yo</th>
+      <th>york</th>
+      <th>yosemite</th>
+      <th>young</th>
+      <th>youtube</th>
+      <th>zayante</th>
+      <th>zero</th>
+      <th>zip</th>
+      <th>zones</th>
+      <th>zoom</th>
+    </tr>
+    <tr>
+      <th>filingDate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-10-28</th>
+      <td>0</td>
+      <td>0</td>
+      <td>109</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>27</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2021-10-29</th>
+      <td>0</td>
+      <td>0</td>
+      <td>130</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>26</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2020-10-30</th>
+      <td>0</td>
+      <td>0</td>
+      <td>152</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>22</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2019-10-31</th>
+      <td>0</td>
+      <td>0</td>
+      <td>116</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>19</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2018-11-05</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>23</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 6468 columns</p>
+</div></div></div>
+</div>
+<p>Using the CountVectorizer and restrict the counting to the top 100 features ordered by frequency across the corpus.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the bag-of-words</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopword_list</span><span class="p">,</span> <span class="n">max_features</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raw_reports</span><span class="p">)</span>
+<span class="c1"># let us take a look at the first reports</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">bow_top100</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">feature_names</span><span class="p">)</span>
+<span class="n">bow_top100</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>accounting</th>
+      <th>adversely</th>
+      <th>apple</th>
+      <th>assets</th>
+      <th>available</th>
+      <th>based</th>
+      <th>billion</th>
+      <th>business</th>
+      <th>cash</th>
+      <th>certain</th>
+      <th>...</th>
+      <th>subject</th>
+      <th>table</th>
+      <th>tax</th>
+      <th>taxes</th>
+      <th>term</th>
+      <th>time</th>
+      <th>total</th>
+      <th>value</th>
+      <th>year</th>
+      <th>years</th>
+    </tr>
+    <tr>
+      <th>filingDate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-10-28</th>
+      <td>44</td>
+      <td>64</td>
+      <td>136</td>
+      <td>65</td>
+      <td>24</td>
+      <td>66</td>
+      <td>82</td>
+      <td>106</td>
+      <td>67</td>
+      <td>69</td>
+      <td>...</td>
+      <td>60</td>
+      <td>12</td>
+      <td>101</td>
+      <td>36</td>
+      <td>33</td>
+      <td>49</td>
+      <td>75</td>
+      <td>66</td>
+      <td>37</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>2021-10-29</th>
+      <td>43</td>
+      <td>59</td>
+      <td>127</td>
+      <td>63</td>
+      <td>30</td>
+      <td>66</td>
+      <td>86</td>
+      <td>104</td>
+      <td>69</td>
+      <td>75</td>
+      <td>...</td>
+      <td>62</td>
+      <td>14</td>
+      <td>113</td>
+      <td>35</td>
+      <td>34</td>
+      <td>45</td>
+      <td>76</td>
+      <td>64</td>
+      <td>31</td>
+      <td>44</td>
+    </tr>
+    <tr>
+      <th>2020-10-30</th>
+      <td>54</td>
+      <td>51</td>
+      <td>138</td>
+      <td>84</td>
+      <td>38</td>
+      <td>71</td>
+      <td>123</td>
+      <td>72</td>
+      <td>122</td>
+      <td>85</td>
+      <td>...</td>
+      <td>58</td>
+      <td>22</td>
+      <td>122</td>
+      <td>37</td>
+      <td>45</td>
+      <td>34</td>
+      <td>92</td>
+      <td>89</td>
+      <td>31</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>2019-10-31</th>
+      <td>57</td>
+      <td>37</td>
+      <td>132</td>
+      <td>80</td>
+      <td>39</td>
+      <td>70</td>
+      <td>114</td>
+      <td>56</td>
+      <td>128</td>
+      <td>81</td>
+      <td>...</td>
+      <td>53</td>
+      <td>20</td>
+      <td>128</td>
+      <td>41</td>
+      <td>46</td>
+      <td>29</td>
+      <td>91</td>
+      <td>92</td>
+      <td>41</td>
+      <td>48</td>
+    </tr>
+    <tr>
+      <th>2018-11-05</th>
+      <td>64</td>
+      <td>52</td>
+      <td>190</td>
+      <td>89</td>
+      <td>45</td>
+      <td>88</td>
+      <td>133</td>
+      <td>66</td>
+      <td>115</td>
+      <td>91</td>
+      <td>...</td>
+      <td>58</td>
+      <td>27</td>
+      <td>179</td>
+      <td>50</td>
+      <td>48</td>
+      <td>48</td>
+      <td>90</td>
+      <td>90</td>
+      <td>47</td>
+      <td>46</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 100 columns</p>
+</div></div></div>
+</div>
+<p>Another option which sometimes makes sense is to transform the occurrence of words in a document only in a binary fashion, i.e., <span class="math notranslate nohighlight">\(1\)</span> if the word occurs and <span class="math notranslate nohighlight">\(0\)</span> otherwise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the bag-of-words</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopword_list</span><span class="p">,</span> <span class="n">binary</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raw_reports</span><span class="p">)</span>
+<span class="c1"># let us take a look at the first reports</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">bow_binary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">feature_names</span><span class="p">)</span>
+<span class="n">bow_binary</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aac</th>
+      <th>aad</th>
+      <th>aapl</th>
+      <th>abandoned</th>
+      <th>abbett</th>
+      <th>abilities</th>
+      <th>ability</th>
+      <th>able</th>
+      <th>abnormal</th>
+      <th>abnormally</th>
+      <th>...</th>
+      <th>yo</th>
+      <th>york</th>
+      <th>yosemite</th>
+      <th>young</th>
+      <th>youtube</th>
+      <th>zayante</th>
+      <th>zero</th>
+      <th>zip</th>
+      <th>zones</th>
+      <th>zoom</th>
+    </tr>
+    <tr>
+      <th>filingDate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-10-28</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2021-10-29</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2020-10-30</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2019-10-31</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2018-11-05</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 6468 columns</p>
+</div></div></div>
+</div>
+<p>Note that it is also possible to include multi-grams of words. For instance if we also consider two adjacent word as a term, this is called a bigram. This exponentially increases the number of terms, however, if we only consider bigrams with a certain minimum occurrence, we may capture special word combinations such as “New York”.</p>
+<p>Words which appear often in all documents are not very informative. Besides the removal of high frequency words, this can be either handled by frequency normalization. One of the most common term frequency normalization is term-frequency inverse-document-frequency (tf-idf). First, we count the number of a term among all documents <span class="math notranslate nohighlight">\(n_j\)</span> and use <span class="math notranslate nohighlight">\(id_j = \log \left( \frac{n}{n_j} \right)\)</span> which is non-negative and the smaller the more often terms appear in different documents. To determine the tf-idf, term frequencies are determined per document <span class="math notranslate nohighlight">\(tf_{ij}\)</span> and weighted with <span class="math notranslate nohighlight">\(id_j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+tf-idf = id_j \cdot tf_{ij}
+\]</div>
+<p>The usage of tf-idf is not always of advantage and it needs to be tested if normalization leads to better results. See below for an example how to generate tf-idf representations using the TfidfVectorizer class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.utils</span> <span class="kn">import</span> <span class="n">simple_preprocess</span>
+<span class="kn">from</span> <span class="nn">gensim.parsing.preprocessing</span> <span class="kn">import</span> <span class="n">STOPWORDS</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+
+<span class="c1"># import the stopword list from the gensim package</span>
+<span class="n">stopword_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">STOPWORDS</span><span class="p">)</span>
+<span class="n">stopword_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+<span class="c1"># create the tf-idf representation</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">stop_words</span> <span class="o">=</span> <span class="n">stopword_list</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">raw_reports</span><span class="p">)</span>
+<span class="c1"># let us take a look at the first reports</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">tfidf_wo_stopwords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dates</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">feature_names</span><span class="p">)</span>
+<span class="n">tfidf_wo_stopwords</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>aac</th>
+      <th>aad</th>
+      <th>aapl</th>
+      <th>abandoned</th>
+      <th>abbett</th>
+      <th>abilities</th>
+      <th>ability</th>
+      <th>able</th>
+      <th>abnormal</th>
+      <th>abnormally</th>
+      <th>...</th>
+      <th>yo</th>
+      <th>york</th>
+      <th>yosemite</th>
+      <th>young</th>
+      <th>youtube</th>
+      <th>zayante</th>
+      <th>zero</th>
+      <th>zip</th>
+      <th>zones</th>
+      <th>zoom</th>
+    </tr>
+    <tr>
+      <th>filingDate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2022-10-28</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.092510</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000849</td>
+      <td>0.022915</td>
+      <td>0.007638</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.002789</td>
+      <td>0.0</td>
+      <td>0.004076</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000849</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2021-10-29</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.106513</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000819</td>
+      <td>0.021303</td>
+      <td>0.008193</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.001795</td>
+      <td>0.0</td>
+      <td>0.002951</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000819</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2020-10-30</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.113777</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000749</td>
+      <td>0.016468</td>
+      <td>0.006737</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.001640</td>
+      <td>0.0</td>
+      <td>0.002696</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000749</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2019-10-31</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.088962</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000767</td>
+      <td>0.014571</td>
+      <td>0.006902</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.001680</td>
+      <td>0.0</td>
+      <td>0.002762</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000767</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2018-11-05</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000694</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000694</td>
+      <td>0.015961</td>
+      <td>0.006246</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.006841</td>
+      <td>0.0</td>
+      <td>0.002500</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000694</td>
+      <td>0.0</td>
+      <td>0.001596</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 6468 columns</p>
+</div></div></div>
+</div>
+</section>
+<section id="similarity-measures">
+<h2>Similarity measures<a class="headerlink" href="#similarity-measures" title="Permalink to this heading">#</a></h2>
+<p>Often, we want to quantify how similar document vectors are. This can be done by distance metrics of vectors. Popular choices are, e.g., the euclidean distance or cosine similarity. Given the document vectors <span class="math notranslate nohighlight">\(\boldsymbol{x}_i\)</span> and <span class="math notranslate nohighlight">\(\boldsymbol{x}_k\)</span>, the euclidean distance is defined by:</p>
+<div class="math notranslate nohighlight">
+\[
+d_{euclidean}\left( \boldsymbol{x}_i, \boldsymbol{x}_k \right) = \sqrt{ \sum_{j=1}^{d} \left(x_{ij} - x_{kj} \right)^2} = ||\boldsymbol{x}_i - \boldsymbol{x}_k||
+\]</div>
+<p>The lower this value, the more close the document vectors are to each other, the more similar they should be. Cosine similarity is defined by:</p>
+<div class="math notranslate nohighlight">
+\[
+d_{cosine} (\boldsymbol{x}_i, \boldsymbol{x}_{k}) = \frac{\sum_{j = 1}^d  x_{ij} x_{kj}}{\sqrt{ \sum_{j = 1}^d x_{ij}^2} \sqrt{ \sum_{j = 1}^d x_{kj}^2}} = \frac{\boldsymbol{x}_i \cdot \boldsymbol{x}_k}{|| \boldsymbol{x}_i || || \boldsymbol{x}_k ||}
+\]</div>
+<p>It measures the angle between vectors and can have values in the range <span class="math notranslate nohighlight">\([-1, 1]\)</span>. If each vector has only non-negative values, its range is in <span class="math notranslate nohighlight">\([0, 1]\)</span>. The smaller the angle between the vectors, the higher the value for cosine similarity.</p>
+<p>Both measures suffer in high-dimensional spaces, meaning if vectors have a high dimension. However, cosine similarity is often favored for text analysis, if it includes sparse vectors. Sparse vectors have many <span class="math notranslate nohighlight">\(0\)</span> entries which have no impact on the distance measure (as the product in the numerator is always zero for this position). A <a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1111/jofi.12885">popular paper</a> in the Journal of Finance by Cohen at al. (2020) finds that bigger changes in 10-K filings indicate a decline in the company’s stock price. With this in mind, let us examine euclidean distances and cosine distances (1 - <span class="math notranslate nohighlight">\(d_{cosine}\)</span>) for the Apple filings.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">euclidean_distances</span><span class="p">,</span> <span class="n">cosine_distances</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="n">document_term_matrix</span> <span class="o">=</span> <span class="n">bow_wo_stopwords</span>
+
+<span class="n">pairwise_euclidean_distances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">euclidean_distances</span><span class="p">(</span><span class="n">document_term_matrix</span><span class="p">,</span> <span class="n">document_term_matrix</span><span class="p">))</span>
+<span class="n">pairwise_cosine_distances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cosine_distances</span><span class="p">(</span><span class="n">document_term_matrix</span><span class="p">,</span> <span class="n">document_term_matrix</span><span class="p">))</span>
+
+<span class="n">apple_distances</span> <span class="o">=</span> <span class="n">apple_filings</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;filingDate&quot;</span><span class="p">]]</span>
+<span class="n">apple_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;euclidean_distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">apple_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;cosine_distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pairwise_euclidean_distances</span><span class="p">)):</span>
+    <span class="n">apple_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;euclidean_distance&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">pairwise_euclidean_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">apple_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s2">&quot;cosine_distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pairwise_cosine_distances</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">apple_distances</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>filingDate</th>
+      <th>euclidean_distance</th>
+      <th>cosine_distances</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2022-10-28</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-10-29</td>
+      <td>102.225242</td>
+      <td>0.003006</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2020-10-30</td>
+      <td>233.062223</td>
+      <td>0.014768</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2019-10-31</td>
+      <td>115.956889</td>
+      <td>0.003834</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2018-11-05</td>
+      <td>447.213595</td>
+      <td>0.046990</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2017-11-03</td>
+      <td>165.984939</td>
+      <td>0.005768</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2016-10-26</td>
+      <td>99.859902</td>
+      <td>0.002058</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2015-10-28</td>
+      <td>154.683548</td>
+      <td>0.005383</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2014-10-27</td>
+      <td>174.496418</td>
+      <td>0.005654</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2013-10-30</td>
+      <td>194.195778</td>
+      <td>0.006893</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2012-10-31</td>
+      <td>177.696370</td>
+      <td>0.007338</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2011-10-26</td>
+      <td>182.638988</td>
+      <td>0.007660</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2010-10-27</td>
+      <td>262.362345</td>
+      <td>0.011083</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2009-10-27</td>
+      <td>308.585482</td>
+      <td>0.014789</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2008-11-05</td>
+      <td>245.904453</td>
+      <td>0.010264</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2007-11-15</td>
+      <td>487.112923</td>
+      <td>0.032028</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2006-12-29</td>
+      <td>579.164916</td>
+      <td>0.034468</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2005-12-01</td>
+      <td>533.965355</td>
+      <td>0.026450</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2004-12-03</td>
+      <td>372.032257</td>
+      <td>0.016449</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2003-12-19</td>
+      <td>252.513366</td>
+      <td>0.007721</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2002-12-19</td>
+      <td>367.362219</td>
+      <td>0.009545</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">apple_distances</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;filingDate&quot;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>euclidean_distance</th>
+      <th>cosine_distances</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>euclidean_distance</th>
+      <td>1.000000</td>
+      <td>0.872044</td>
+    </tr>
+    <tr>
+      <th>cosine_distances</th>
+      <td>0.872044</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </section>
 <section id="dictionary-based-modeling">
 <h2>Dictionary based modeling<a class="headerlink" href="#dictionary-based-modeling" title="Permalink to this heading">#</a></h2>
@@ -450,6 +1873,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-based-modeling">Frequency based modeling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#similarity-measures">Similarity measures</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dictionary-based-modeling">Dictionary based modeling</a></li>
 </ul>
   </nav></div>
