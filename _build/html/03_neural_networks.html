@@ -62,6 +62,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '03_neural_networks';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -339,7 +341,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -355,6 +359,18 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-building-blocks-of-neural-networks">The building blocks of neural networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-task">Regression task</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-tasks">Classification tasks</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -366,6 +382,213 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="neural-networks">
 <h1>Neural networks<a class="headerlink" href="#neural-networks" title="Permalink to this heading">#</a></h1>
+<p>Language models which use frequency based approaches as shown in the last chapter come along with potential pitfalls. For instance, the bag-of-words approach produces sparse high-dimensional vectors which has no further information about the context of the original text. Dictionary based approaches depend on the dictionary used and also lose contextual information. In the remainder of this course, we are going to learn about language models that aim to tackle these issues. The models we are going to use usually create numerical representations of words and documents that capture semantic meaning. This means numerical representations are similar if the meaning of words and documents is similar and vice versa. To learn about the meaning of words and documents parametric statistical models are used. These models need to be trained on corpora. The architecture of these models is developed using neural networks. This is why we first discuss neural networks in general in this chapter. Please also note that not all language models use neural networks, however, all models used from now on. Other modeling approaches rely upon matrix decompositions of document term matrices or probablitic modeling of text generation.</p>
+<section id="the-building-blocks-of-neural-networks">
+<h2>The building blocks of neural networks<a class="headerlink" href="#the-building-blocks-of-neural-networks" title="Permalink to this heading">#</a></h2>
+<p>Each neural network has so called layers. The first layer which receives input data is called the input layer, the last layer in a neural network returns processed input and is called the output layer. In between those two layers hidden layers can be used. Each layer consists of a number of neurons which is defined by the user. Furthermore, the output of each layer is activated by activation functions. Let us summarize, each neural network has:</p>
+<ul class="simple">
+<li><p>layers</p></li>
+<li><p>neurons</p></li>
+<li><p>activation functions</p></li>
+</ul>
+<p>Besides these similarities a large amount of different neural network architectures exists. Let us define the neurons <span class="math notranslate nohighlight">\(\boldsymbol{h}^{(l)}\)</span> of a layer <span class="math notranslate nohighlight">\(l\)</span> by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{h}^{(l)} = 
+\begin{pmatrix}
+    h_1^{(l)} \\
+    \vdots \\
+    h_{p_l}^{(l)}
+\end{pmatrix}
+\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(p_l\)</span> represents the number of neurons in layer <span class="math notranslate nohighlight">\(l\)</span>. The neurons of each layer (except for the output layer) are aggregated in a weighted fashion which is called affine map:</p>
+<div class="math notranslate nohighlight">
+\[
+z^{(l)} = w_{1}^{(l-1)} h_1^{(l-1)} + w_{2}^{(l-1)} h_2^{(l-1)} + ... + w_{p_{l-1}}^{(l-1)} h_{p_{l-1}}^{(l-1)} + b^{(l-1)}
+\]</div>
+<p>The output of this transformation is used as input for an activation function <span class="math notranslate nohighlight">\(g\)</span>. Various activation functions are used for neural networks. Popular examples are</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Identity</p></td>
+<td><p><span class="math notranslate nohighlight">\(g(z) = z\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Relu</p></td>
+<td><p><span class="math notranslate nohighlight">\(g(z) = \max (z, 0)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Sigmoid</p></td>
+<td><p><span class="math notranslate nohighlight">\(g(z) = \frac{1}{1 + e^{-z}} \)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>See the output below for their visualization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Identity&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Relu&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Relu&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ce89da7894381bbacfd76dd47e7e36ab45e1d432ac96a54d74154231b5895adf.png" src="_images/ce89da7894381bbacfd76dd47e7e36ab45e1d432ac96a54d74154231b5895adf.png" />
+</div>
+</div>
+<p>The result of the activation function is the hidden neuron for the next layer. Thus, to create a single neuron for the next layer, we use:</p>
+<div class="math notranslate nohighlight">
+\[
+h^{(l)} = g(z^{(l)}) = g \left(w_{1}^{(l-1)} h_1^{(l-1)} + w_{2}^{(l-1)} h_2^{(l-1)} + ... + w_{p_{l-1}}^{(l-1)} h_{p_{l-1}}^{(l-1)} + b^{(l-1)}\right)
+\]</div>
+<p>If you use different values for the parameters <span class="math notranslate nohighlight">\(w_{1}^{(l-1)}, w_{2}^{(l-1)}, ..., w_{p_{l-1}}^{(l-1)}, b^{(l-1)}\)</span>, we generate different neurons. And this is what usually is done, especially for hidden layers. The user sets a desired number of hidden neurons <span class="math notranslate nohighlight">\(p_l\)</span> which are calculated by:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{h}^{(l)} = g \left( \boldsymbol{W}^{(l-1), T} \boldsymbol{h}^{(l-1)} + \boldsymbol{b}^{(l-1)}  \right) 
+\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{W}^{(l-1)} = 
+\begin{pmatrix}
+w_{11}^{(l-1)} &amp; \cdots &amp; w_{1p_{l-1}}^{(l)} \\
+\vdots &amp; \ddots \\
+w_{p_{l-1}1}^{(l-1)} &amp; \cdots &amp; w_{p_{l-1}p_{l}}^{(l-1)} \\
+\end{pmatrix},
+\boldsymbol{b}^{(l)} = 
+\begin{pmatrix}
+b_1^{(l-1)} \\
+\vdots \\
+b_{p_{l}}^{(l-1)} \\
+\end{pmatrix}
+\end{split}\]</div>
+<p>Technically, activation functions can be different for every layer such that we may also want to write <span class="math notranslate nohighlight">\(g^{(l-1)}\)</span> instead of <span class="math notranslate nohighlight">\(g\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{h}^{(l)} = g^{(l)} \left( \boldsymbol{W}^{(l-1), T} \boldsymbol{h}^{(l-1)} + \boldsymbol{b}^{(l-1)}  \right) 
+\]</div>
+<p>These operations are repeated for as many layers as desired by the user. For instance, let us take a look how data would be processed for a neural network with one hidden layer, two hidden neurons and one neuron in the output layer. Let us further assume that the network receives realizations of three input variables <span class="math notranslate nohighlight">\(x_1, x_2, x_3\)</span> in the input layer and only the identity function is used for activation in each layer.</p>
+<p>The input neurons are <span class="math notranslate nohighlight">\(h_1^{(1)} = x_1, h_2^{(1)} = x_2, h_3^{(1)} = x_3\)</span>. The hidden neurons for the next layer are calculated by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\boldsymbol{h}^{(2)} = g^{(1)} \left(
+\begin{pmatrix}
+w_{11}^{(1)} &amp; w_{21}^{(1)} &amp; w_{31}^{(1)} \\
+w_{12}^{(1)} &amp; w_{22}^{(1)} &amp; w_{32}^{(1)} \\
+\end{pmatrix} 
+\begin{pmatrix}
+h_1^{(1)} \\ h_2^{(1)} \\ h_3^{(1)} \\
+\end{pmatrix} +
+\begin{pmatrix}
+b_{1}^{(1)}  \\
+b_{2}^{(1)}  \\
+\end{pmatrix} 
+\right) = 
+\begin{pmatrix}
+w_{11}^{(1)} &amp; w_{21}^{(1)} &amp; w_{31}^{(1)} \\
+w_{12}^{(1)} &amp; w_{22}^{(1)} &amp; w_{32}^{(1)} \\
+\end{pmatrix} 
+\begin{pmatrix}
+h_1^{(1)} \\ h_2^{(1)} \\ h_3^{(1)} \\
+\end{pmatrix} +
+\begin{pmatrix}
+b_{1}^{(1)}  \\
+b_{2}^{(1)}  \\
+\end{pmatrix} =
+\begin{pmatrix}
+h_{1}^{(2)}  \\
+h_{2}^{(2)}  \\
+\end{pmatrix}
+\end{split}\]</div>
+<p>To produce the output of the neural network, we further process these neurons through the second (output) layer by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+h^{(3)} = g^{(2)} \left(
+\begin{pmatrix}
+w_{1}^{(2)} &amp; w_{2}^{(2)}  \\
+\end{pmatrix} 
+\begin{pmatrix}
+h_1^{(2)} \\ h_2^{(2)} \\
+\end{pmatrix} +
+b^{(2)}
+\right) = 
+w_{1}^{(2)} h_1^{(2)} + w_{2}^{(2)} h_2^{(2)} + b^{(2)}
+\end{split}\]</div>
+<p>The only thing which is fixed here are the input values <span class="math notranslate nohighlight">\(h_1^{(1)} = x_1, h_2^{(1)} = x_2, h_3^{(1)} = x_3\)</span>. All other values <span class="math notranslate nohighlight">\(\boldsymbol{W}^{(1)}, \boldsymbol{b}^{(1)}, \boldsymbol{W}^{(2)}, \boldsymbol{b}^{(2)}\)</span> are parameters which need to be trained for the model. The number of parameters is determined by the number of hidden neurons which we set for every layer. The more hidden neurons we would like to use, the higher the number of parameters which needs to be trained. What we see in the example above is what is called a forward pass which describes how the input data is processed through the network. Note that there are no real limits regarding the architecture. For instance you can also define a neural network which produces more than one neuron in the output layer. However, the question that remains is how are the parameters trained?</p>
+<p>In order to train the parameters we need another function which is called loss or cost function and supposed to be minimized by adjusting parameters accordingly. The choice of the loss function depends on the task which is supposed to be tackled with the neural network. Popular examples for such tasks belong to the field of supervised learning where and are regression or classification problems. Let us take a look at these examples to dig deeper into the training process of a neural network.</p>
+<section id="regression-task">
+<h3>Regression task<a class="headerlink" href="#regression-task" title="Permalink to this heading">#</a></h3>
+<p>A regression model is supposed to make predictions for a numerical values, usually a real valued number. Given information by feature variables (which are also called independent or predictor variables), the model processes this information to make predictions for the target variable (also called dependent variable). Generally, this can be written by <span class="math notranslate nohighlight">\(f_{\boldsymbol{\Theta}}\left(\boldsymbol{x}\right)\)</span>, where <span class="math notranslate nohighlight">\(f\)</span> is the function which processes feature variables <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>. Usually the model predictions depend on parameters which are collected in the set <span class="math notranslate nohighlight">\(\boldsymbol{\Theta}\)</span>. An easy example is the linear regression model. The parameters are <span class="math notranslate nohighlight">\(\boldsymbol{\Theta}= \lbrace w_1, ..., w_p, b \rbrace\)</span>, and, the function is defined by:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\boldsymbol{\Theta}}\left(\boldsymbol{x}\right) = w_1 x_1 + ... + w_p x_p + b = \boldsymbol{w}^T \boldsymbol{x} + b = \hat{y}_{i, \boldsymbol{\Theta}}
+\]</div>
+<p>If we want to tackle a regression task with a neural network, the output activation is supposed to be the identity function to create a real valued number. Besides, all components of the neural network can be set by the user as desired. To train the parameters of a neural network (or other models for regression tasks), we can choose among different loss functions, however, the most common is the (average) sum of squared deviations.</p>
+<div class="math notranslate nohighlight">
+\[
+L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\Theta}}\right) = \sum_i \left(y_i - \hat{y}_{i, \boldsymbol{\Theta}} \right)^2 
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\hat{y}_{i, \boldsymbol{\Theta}} =  f_{\boldsymbol{\Theta}}\left(\boldsymbol{x}_i\right) \)</span> being the prediction for <span class="math notranslate nohighlight">\(y_i\)</span>. Thus, the loss function value for a neural network is smaller if model predictions are close to realizations on average. In essence, we face an optimization problem to train all model parameters which is:</p>
+<div class="math notranslate nohighlight">
+\[
+\min_{\boldsymbol{\Theta}} L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\Theta}}\right)
+\]</div>
+<p>and, given data, we can use the solution to this optimization:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\boldsymbol{\Theta}} = \argmin_{\boldsymbol{\Theta}} L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\Theta}}\right)
+\]</div>
+<p>While such a solution is available in closed form for the multiple linear regression model it is not for neural networks, nor is it unique. This is why we usually aim to approximate this solution by numerical optimization techniques. With respect to neural networks, gradient descent techniques are very popular. We are going to take a look at this later, but, first let us take a look at classification tasks to examine some similarities regarding the architecture and training of neural networks.</p>
+</section>
+<section id="classification-tasks">
+<h3>Classification tasks<a class="headerlink" href="#classification-tasks" title="Permalink to this heading">#</a></h3>
+<p>In case of classification tasks, the model is supposed to predict categories of a target variable. If only two categories exist, this is called binary classification, for more than two categories, we speak about multi-class classification. Usually the categories are disjoint, meaning, only one of the categories can occur at a time. If more categories can occur for one observation, it is called multi-label classification.</p>
+<p>Usually, categories are encoded into numbers or by one-hot-vector encoding. While the original observation is a unique label, e.g., “buy”, the numerical representation is <span class="math notranslate nohighlight">\(y = 1\)</span>, and after one-hot encoding it is <span class="math notranslate nohighlight">\(\begin{pmatrix} 0 &amp; 1 \end{pmatrix}\)</span>. In general, one-hot-vectors are vectors with dimensionality being equal to the number of categories and a <span class="math notranslate nohighlight">\(1\)</span> at the position which represents the corresponding category. For instance, if the original target variable has the categories “buy”, “not buy”, we can first encode it in numbers like <span class="math notranslate nohighlight">\(0, 1\)</span> or <span class="math notranslate nohighlight">\(1, 2\)</span> or to one-hot-vectors <span class="math notranslate nohighlight">\(\begin{pmatrix} 0 &amp; 1 \end{pmatrix}\)</span>, <span class="math notranslate nohighlight">\(\begin{pmatrix} 1 &amp; 0 \end{pmatrix}\)</span>. For binary classification, one usually uses a numerical dummy encoding <span class="math notranslate nohighlight">\(0, 1\)</span> with <span class="math notranslate nohighlight">\(1\)</span> representing the category of interest. One-hot-vectors are mostly used for classification with more than two categories. For all classification models, we usually predict the probability for being a specific category instead of a direct category prediction. With respect to neural networks, this determines the choice of the output activation function.</p>
+<p>Given a binary classification task, one uses the sigmoid function in the output layer. This function takes a real-valued number <span class="math notranslate nohighlight">\(z\)</span> and maps it to the numerical range <span class="math notranslate nohighlight">\(\left(0, 1\right)\)</span>. The easiest version of this model is represented by the logistic regression model, which can be considered as a special form for a neural network without hidden layer and the sigmoid activation. This is basically the linear regression model whose output is inserted in the sigmoid function:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\boldsymbol{\Theta}}\left(\boldsymbol{x}\right) = \frac{1}{1 + e^{- \left(w_1 x_1 + ... + w_p x_p + b\right)}} = \frac{1}{1 + e^{-  \left( \boldsymbol{w}^T \boldsymbol{x} + b \right) }} = \hat{y}_{i, \boldsymbol{\Theta}}
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\hat{y}_{i, \boldsymbol{\Theta}}\)</span> represents the probability for observation <span class="math notranslate nohighlight">\(i\)</span> to fall into category <span class="math notranslate nohighlight">\(1\)</span>. Note that a neural network is the same with arbitrary hidden layers between the input and the output layer. To train the parameters for a binary classification model, we need a loss function which is lower if probability predictions are in line with actual categorical observations. This means if <span class="math notranslate nohighlight">\(y=0\)</span> the model is supposed to predict a small value for <span class="math notranslate nohighlight">\(\hat{y}_{i, \boldsymbol{\Theta}}\)</span> and if <span class="math notranslate nohighlight">\(y=1\)</span>, <span class="math notranslate nohighlight">\(\hat{y}_{i, \boldsymbol{\Theta}}\)</span> should be a high value close towards <span class="math notranslate nohighlight">\(1\)</span>. We should mention that a low value for <span class="math notranslate nohighlight">\(\hat{y}_{i, \boldsymbol{\Theta}}\)</span> is a high probability prediction for <span class="math notranslate nohighlight">\(y=0\)</span> as <span class="math notranslate nohighlight">\(P\left(y = 0\right) = 1 - \hat{y}_{i, \boldsymbol{\Theta}}\)</span>. A popular loss function is the cross-entropy. The model is considered to provide better predictions the lower:</p>
+<div class="math notranslate nohighlight">
+\[
+L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\Theta}}\right) = - \sum_i y_i \log \left(\hat{y}_{i, \boldsymbol{\Theta}}\right) + \left(1 - y_i\right) \log \left(1 - \hat{y}_{i, \boldsymbol{\Theta}}\right)
+\]</div>
+<p>For a better understanding of the intuition of this loss function, take a look in output below. We plot the value of <span class="math notranslate nohighlight">\(-\log(p)\)</span> for <span class="math notranslate nohighlight">\(p \in (0, 1)\)</span>. As <span class="math notranslate nohighlight">\(-\log(p)\)</span> is strictly monotonic decreasing, smaller loss values result for observations with high probability predictions for the realized category.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$p$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$-\log(p)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/54bbec693845e3b2a6b330c2f1ca7202139bad5e978bcaa66f47fe3a655a263c.png" src="_images/54bbec693845e3b2a6b330c2f1ca7202139bad5e978bcaa66f47fe3a655a263c.png" />
+</div>
+</div>
+<p>While the loss function is quite similar for multi-class classification…</p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -413,6 +636,24 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-building-blocks-of-neural-networks">The building blocks of neural networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regression-task">Regression task</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-tasks">Classification tasks</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
