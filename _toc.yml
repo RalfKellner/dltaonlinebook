@@ -7,4 +7,5 @@ chapters:
 - file: 01_wording_preprocessing
 - file: 02_frequency_dictionary_models
 - file: 03_neural_networks
+- file: 04_word_embeddings
 

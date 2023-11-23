@@ -54,6 +54,7 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
@@ -67,7 +68,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = '03_neural_networks';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Text analysis without trained models" href="02_frequency_dictionary_models.html" />
+    <link rel="next" title="Word embeddings with Word2Vec" href="04_word_embeddings.html" />
+    <link rel="prev" title="Model free text analysis" href="02_frequency_dictionary_models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -169,8 +171,9 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_wording_preprocessing.html">Text analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_frequency_dictionary_models.html">Text analysis without trained models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_frequency_dictionary_models.html">Model free text analysis</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_word_embeddings.html">Word embeddings with Word2Vec</a></li>
 </ul>
 
     </div>
@@ -599,7 +602,11 @@ w_{11} &amp; w_{12} &amp; ... &amp; w_{1K} \\
 w_{21} &amp; w_{22} &amp; ... &amp; w_{2K} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
 w_{p1} &amp; w_{p2} &amp; ... &amp; w_{pK} \\
-\end{pmatrix} = 
+\end{pmatrix} +
+\begin{pmatrix}
+b_{1} &amp; b_{2} &amp; ... &amp; b_{p} \\
+\end{pmatrix}
+= 
 \begin{pmatrix}
 z_{i, 1} &amp; z_{i, 2} &amp; ... &amp; z_{i, K} \\
 \end{pmatrix}
@@ -630,7 +637,7 @@ L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\theta}}\right) = - \s
 </section>
 <section id="training-neural-networks">
 <h2>Training neural networks<a class="headerlink" href="#training-neural-networks" title="Permalink to this heading">#</a></h2>
-<p>At the moment you should understand that neural networks are basically a combination of matrix and vector operations and (mostly) non-linear function transformations. In addition, each neural network depends on the chosen architecture which is defined by, e.g., setting the number of hidden layers and output dimensions. To process input information through the network, parameters are used. These parameters are initially set by constant values or they are drawn randomly. However, for a network to fulfill its purpose in the best possible way, parameters are trained based on a data sample. We have seen above that this is done by minimizing a loss function. Usually, analytical solutions are not available for the majority of neural network architectures and we need to rely upon algorithmic optimization schemes.</p>
+<p>At the moment you should understand that neural networks are basically a combination of matrix and vector operations and (mostly) non-linear function transformations. In addition, each neural network depends on the chosen architecture which is defined by, e.g., setting the number of hidden layers, neurons and the output dimension. To process input information through the network, parameters are used. These parameters are initially set by constant values or they are drawn randomly. However, for a network to fulfill its purpose in the best possible way, parameters are trained based on a data sample. We have seen above that this is done by minimizing a loss function. Usually, analytical solutions are not available for the majority of neural network architectures and we need to rely upon algorithmic optimization schemes.</p>
 <p>Let us refresh some general basics of optimization. Given a function <span class="math notranslate nohighlight">\(L: \mathbb{R} \to \mathbb{R}\)</span> (one input - one output value), with <span class="math notranslate nohighlight">\(l = L(\theta)\)</span>, the local minimum of <span class="math notranslate nohighlight">\(L\)</span> is defined as the point <span class="math notranslate nohighlight">\(\theta^{*}\)</span> such that all values around <span class="math notranslate nohighlight">\(L(\theta^{*})\)</span> are higher if <span class="math notranslate nohighlight">\(\theta^{*}\)</span> is changed by an infinitesimally small amount. A global minimum is the set of points with the smallest possible value over the domain of <span class="math notranslate nohighlight">\(L\)</span>. Due to the duality of optimization, one can translate every maximization problem into a minimization problem by multiplying the function with <span class="math notranslate nohighlight">\(-1\)</span>. So without the loss of generality, we continue with the discussion of minimization. To find candidates for local or global minima one searches for stationary points. A stationary point is the value of <span class="math notranslate nohighlight">\(\theta\)</span> at which the value for the first derivative of <span class="math notranslate nohighlight">\(L\)</span> is equal to zero, i.e., <span class="math notranslate nohighlight">\(\frac{\partial L}{\partial \theta} = 0\)</span>. Stationary points can be either a minimum, maximum or saddle point. To identify the category for every stationary point, one can use the second derivative. These concepts can be used in analogy if we analyze functions with multidimensional input, i.e., <span class="math notranslate nohighlight">\(L: \mathbb{R}^p \to \mathbb{R}\)</span> with <span class="math notranslate nohighlight">\(l = L\left( \boldsymbol{\theta} \right)\)</span>. To us, this is the more relevant scenario as neural networks have multiple parameters, but, for one observation in a data set we determine one loss value. A stationary point for a multidimensional function is defined at the point <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> at which the gradient of <span class="math notranslate nohighlight">\(L\)</span> is zero. The gradient is the vector of all partial derivatives:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -641,7 +648,7 @@ L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\theta}}\right) = - \s
 \frac{\partial L}{\partial \theta_q} \\
 \end{pmatrix}
 \end{split}\]</div>
-<p>with <span class="math notranslate nohighlight">\(q\)</span> being the number of all parameters. Besides the gradient, one used the Hessian matrix to check stationary points for the extremum identity. Analytical solutions for minimization problems mostly rely upon the convexity of the function to be optimized. Loss functions which are defined by the usage of neural networks usually are non-convex and exhibit multiple local minima. This is why one has to search for stationary points iteratively. To understand the iterative search called gradient descent, let us take a look at a small and unrealistic example. Given one data point <span class="math notranslate nohighlight">\((x = 2, y = 3)\)</span>, we aim to find the parameter <span class="math notranslate nohighlight">\(\theta\)</span> which minimizes the loss function <span class="math notranslate nohighlight">\(L\left( y, \hat{y}_{\theta} \right) = \left(y - \hat{y}_{\theta}\right)^2\)</span> with <span class="math notranslate nohighlight">\(\hat{y}_{\theta} = f_{\theta}(x) = \theta x\)</span>. The stationary point can be found by:</p>
+<p>with <span class="math notranslate nohighlight">\(q\)</span> being the number of all parameters. Besides the gradient, one uses the Hessian matrix to check stationary points for the extremum identity. Analytical solutions for minimization problems mostly rely upon the convexity of the function to be optimized. Loss functions which are defined by the usage of neural networks usually are non-convex and exhibit multiple local minima. This is why one has to search for stationary points iteratively. To understand the iterative search called gradient descent, let us take a look at a small and unrealistic example. Given one data point <span class="math notranslate nohighlight">\((x = 2, y = 3)\)</span>, we aim to find the parameter <span class="math notranslate nohighlight">\(\theta\)</span> which minimizes the loss function <span class="math notranslate nohighlight">\(L\left( y, \hat{y}_{\theta} \right) = \left(y - \hat{y}_{\theta}\right)^2\)</span> with <span class="math notranslate nohighlight">\(\hat{y}_{\theta} = f_{\theta}(x) = \theta x\)</span>. The stationary point can be found by:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 \begin{aligned}
@@ -732,7 +739,7 @@ L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\theta}}\right) = - \s
 <img alt="_images/7cb9dc516da3d5bc91c59f59ccd7c25bd8278df65de9c24951f13cc2d26fc680.png" src="_images/7cb9dc516da3d5bc91c59f59ccd7c25bd8278df65de9c24951f13cc2d26fc680.png" />
 </div>
 </div>
-<p>We observe that the learning rate needs to be treated with care, choosing its value too small leads to a slow and long lasting training process which may not find the local minimum, setting the learning rate too high may overshoot the local minimum and leads the search away from the minimum. In reality, one may examine the impact of the learning rate by setting different values. Furthermore, the learning rate may be adjusted during the training process. Intuitively, we may want to change the parameters to a larger extent when they just have been initialized randomly and later, once the model starts to understand the underlying dynamics, updates need to be smaller. Such dynamic adjustments are handled by different optimizers, e.g., Momentum, Adam or  RMSprop.</p>
+<p>We observe that the learning rate needs to be treated with care, choosing its value too small leads to a slow and long lasting training process which may not find the local minimum, setting the learning rate too high may overshoot the local minimum and leads the search away from the minimum. In reality, one can examine the impact of the learning rate by setting different values. Furthermore, the learning rate is often adjusted during the training process by a little more advanced gradient search based algorithms. Intuitively, we want to change the parameters to a larger extent when they just have been initialized randomly and later, once the model starts to understand the underlying dynamics, updates need to be smaller. Such dynamic adjustments are handled by different optimizers, e.g., Momentum, Adam or  RMSprop.</p>
 <p>The good news is that the procedure of gradient descent is the same if our model has more than one parameter. The only thing which changes is that our vector containing all model parameters <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> is updated using the information of all partial derivatives (the gradient) at once. Thus, the algorithm in general can be written as follows:</p>
 <ol class="arabic simple">
 <li><p>Start with a random guess: <span class="math notranslate nohighlight">\(\boldsymbol{\theta}^{(0)}\)</span></p></li>
@@ -743,8 +750,8 @@ L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\theta}}\right) = - \s
 </ol>
 </li>
 </ol>
-<p>In addition, some further considerations are taken into account when using gradient descent for the training of neural networks. Instead of using only one observation, one can use the average gradient information for every observation <span class="math notranslate nohighlight">\(i\)</span>. This is called batch gradient descent because the full data batch is used to update model parameters. This can be computationally expensive. Moreover, the information of certain observations may be redundant, i.e., if observations are very similar it suffices to use the information of one of these observations. The opposite of full batch gradient descent is called stochastic gradient descent where the gradient of only one observation is used per iteration step. This observation is drawn randomly. The compromise is mini-batch gradient descent which randomly draws a mini batch with batch size smaller than the data sample size and uses its gradient information for an iteration step. Note that some common libraries report the improvement of the training algorithm after an epoch. An epoch is reached after the number of samples used for gradient updates is equal to the data sample size. For instance, for a data sample of size <span class="math notranslate nohighlight">\(n = 100\)</span> which uses batches of size <span class="math notranslate nohighlight">\(10\)</span>, an epoch is finished after the processing of <span class="math notranslate nohighlight">\(10\)</span> mini batches. Using stochastic or mini-batch gradient descent may also help to decrease the risk of the algorithm to get stuck in a unique local minimum while lower minima may be close.</p>
-<p>The last open question is how we can determine partial derivatives for each parameter, especially for deep neural networks with many hidden layers and non-linear activation functions? The answer is: quite simple and as we do it for simpler prediction models. The reason for this is the application of the chain rule. From your math courses you should remember the chain rule which dictates you how to derive derivatives for compositions of functions. Given the function <span class="math notranslate nohighlight">\(h: g \circ f\)</span> with <span class="math notranslate nohighlight">\(h(x) = g\left( f \left(x \right) \right)\)</span>, the derivative is determined by:</p>
+<p>In addition, some further considerations are taken into account when using gradient descent for the training of neural networks. Instead of using only one observation, one can use the average gradient information for every observation <span class="math notranslate nohighlight">\(i\)</span>. This is called batch gradient descent because the full data batch is used to update model parameters. This can be computationally expensive. Moreover, the information of certain observations may be redundant, i.e., if observations are very similar it suffices to use the information of one of these observations. The opposite of full batch gradient descent is called stochastic gradient descent where the gradient of only one observation is used per iteration step. This observation is drawn randomly. The compromise is mini-batch gradient descent which randomly draws a mini batch with batch size smaller than the data sample size and uses its gradient information for an iteration step. Note that some common libraries report the improvement of the training algorithm after an epoch. An epoch is reached after the number of samples used for gradient updates is equal to the data sample size. For instance, for a data sample of size <span class="math notranslate nohighlight">\(n = 100\)</span> which uses batches of size <span class="math notranslate nohighlight">\(10\)</span>, an epoch is finished after the processing of <span class="math notranslate nohighlight">\(10\)</span> mini batches. Using stochastic or mini-batch gradient descent may also help to decrease the risk of the algorithm to get stuck in a unique local minimum while smaller minima may be close.</p>
+<p>The last open question is how all partial derivatives for each parameter are determined, especially for deep neural networks with many hidden layers and non-linear activation functions? The answer is: quite simple and as we do it for simpler prediction models. The reason for this is the application of the chain rule. From your math courses you should remember the chain rule which dictates you how to derive derivatives for compositions of functions. Given the function <span class="math notranslate nohighlight">\(h: g \circ f\)</span> with <span class="math notranslate nohighlight">\(h(x) = g\left( f \left(x \right) \right)\)</span>, the derivative is determined by:</p>
 <div class="math notranslate nohighlight">
 \[
 \frac{\partial h}{\partial x} = \frac{\partial g}{\partial f} \frac{\partial f}{\partial x}
@@ -754,7 +761,7 @@ L \left(\boldsymbol{y}, \boldsymbol{\hat{y}}_{\boldsymbol{\theta}}\right) = - \s
 \[
 g^{(L)} \left(f^{(L)} \left( ... \left( g^{(1)} \left( f^{(1)} \left( \boldsymbol{x} \right) \right) \right) \right) \right)
 \]</div>
-<p>This is why each partial derivative can be determined applying the chain rule. As the outer functions in the formula above represent the last operations of the network, we need these derivatives first. This is why we backpropagate through the network from output to input when deriving all partial derivatives. With this information we conclude the essential steps which necessary to build and train a neural network, in detail we need:</p>
+<p>This is why each partial derivative can be determined applying the chain rule. As the outer functions in the formula above represent the last operations of the network, we need these derivatives first. This is why we backpropagate through the network from output to input when deriving all partial derivatives. With this information we conclude the essential steps which are necessary to build and train a neural network, in detail we need:</p>
 <ul class="simple">
 <li><p>the input dimension</p></li>
 <li><p>the network architecture</p></li>
@@ -765,7 +772,7 @@ g^{(L)} \left(f^{(L)} \left( ... \left( g^{(1)} \left( f^{(1)} \left( \boldsymbo
 </section>
 <section id="evaluating-and-improving-neural-networks">
 <h2>Evaluating and improving neural networks<a class="headerlink" href="#evaluating-and-improving-neural-networks" title="Permalink to this heading">#</a></h2>
-<p>Different aspects need to be taken into account when we want to find out how well a neural network captures real-world dynamics inherent in the data. Due to the different scope of this course, we only shortly these aspects as follows.</p>
+<p>Different aspects need to be taken into account when we want to find out how well a neural network captures real-world dynamics inherent in the data. Due to the different scope of this course, we only shortly discuss these aspects as follows.</p>
 <section id="performance-of-neural-networks">
 <h3>Performance of neural networks<a class="headerlink" href="#performance-of-neural-networks" title="Permalink to this heading">#</a></h3>
 <p>When building a statistical model, our hope is to build a simplified representation of real-world dynamics. In order to evaluate how well the model captures these dynamics, performance metrics can be used. These metrics need to be chosen with care and they must be appropriate for the specific task. A great variety of performance metrics can be seen <a class="reference external" href="https://scikit-learn.org/stable/modules/model_evaluation.html">here</a>. Popular examples are the mean squared error or the mean absolute error for regression tasks.</p>
@@ -791,20 +798,20 @@ acc =
 0 &amp; \text{ else }
 \end{cases}
 \end{split}\]</div>
-<p>However, different prediction error can be made for classification tasks which is why it is better to examine the different types of estimation errors for classification problems. For instance we may agree it is not as bad to falsely predict a patient to be ill, if she is not, in comparison to overlook an illness. To examine these different error one can focus on the precision and recall for binary classification or adjust these metrics for multi-class classification.</p>
+<p>However, different prediction errors can be made for classification tasks which is why it is better to examine the different types of estimation errors for classification problems. For instance we may agree it is not as bad to falsely predict a patient to be ill, if she is not, in comparison to overlook an illness. To examine these different errors one can focus on the precision and recall for binary classification or adjust these metrics for multi-class classification.</p>
 </section>
 <section id="generalization-of-neural-networks">
 <h3>Generalization of neural networks<a class="headerlink" href="#generalization-of-neural-networks" title="Permalink to this heading">#</a></h3>
-<p>To examine if a trained model has identified real-world dynamics correctly, we want to examine its model performance for new and unseen data. Only if the model exhibits similar performance for this data, we may infer that the model learned some general relationships which are true for the data generating process. This is why data is always split into training and test data. Training data is used for parameter estimation and test data is used to evaluate the model for new data. Splitting the overall data set only once into training and test data exposes the model evaluation to a relatively large degree of statistical uncertainty. This is why so cross validation approaches should be favored. One popular example is k-fold cross validation which splits the data sample into k equally sized folds. For k times one fold is left out for testing and the remaining folds are used for training.</p>
+<p>To examine if a trained model has identified real-world dynamics correctly, we want to examine its model performance for new and unseen data. Only if the model exhibits similar performance for this data, we may infer that the model learned some general relationships which are true for the data generating process. This is why data is always split into training and test data. Training data is used for parameter estimation and test data is used to evaluate the model for new data. Splitting the overall data set only once into training and test data exposes the model evaluation to a relatively large degree of statistical uncertainty. This is why cross validation approaches should be favored. One popular example is k-fold cross validation which splits the data sample into k equally sized folds. For k times one fold is left out for testing and the remaining folds are used for training. The final evaluation metric for the network is usually the average of evaluation metrics over k test folds.</p>
 </section>
 <section id="hyperparameter-tuning">
 <h3>Hyperparameter tuning<a class="headerlink" href="#hyperparameter-tuning" title="Permalink to this heading">#</a></h3>
-<p>Besides the parameters of the neural network its performance can be further impacted by certain choices, e.g., the number of hidden layers, the number of hidden neurons, activation function choices, the optimization algorithm and its learning rate. These choices are called hyperparameters. To further tune these parameters one repeats estimation and evaluation schemes for neural networks with different sets of hyperparameter choices and chooses the best combination. Different approaches exist to conduct hyperparameter optimization such as grid search, random search or even more sophisticated routines. Note that hyperparameter tuning demands the data sample to be split into at least three parts. The training data is used for parameter estimation, given a fixed set of hyperparameters; validation data is used to evaluate and compare the out of sample performance for different hyperparameter settings; test data is used to evaluate the model after optimizing hyperparameters. One practical routing could be to split the data set first and leave out one of these splits for testing. The remaining split is used to conduct cross validation with different hyperparameter settings. One may choose to use the hyperparamter setting which maximizes the cross validation score. Finally, the test data is evaluated w.r.t. the thought of generalization.</p>
+<p>Besides the parameters of the neural network, its performance can be further impacted by certain choices, e.g., the number of hidden layers, the number of hidden neurons, activation function choices, the optimization algorithm and its learning rate. These choices are called hyperparameters. To further tune these parameters one repeats estimation and evaluation schemes for neural networks with different sets of hyperparameter choices and chooses the best combination. Different approaches exist to conduct hyperparameter optimization such as grid search, random search or even more sophisticated routines. Note that hyperparameter tuning demands the data sample to be split into at least three parts. The training data is used for parameter estimation, given a fixed set of hyperparameters; validation data is used to evaluate and compare the out of sample performance for different hyperparameter settings; test data is used to evaluate the model after optimizing hyperparameters. One practical routing could be to split the data set first and leave out one of these splits for testing. The remaining split is used to conduct cross validation with different hyperparameter settings. One may choose to use the hyperparamter setting which maximizes the cross validation score. Finally, the test data is evaluated.</p>
 </section>
 </section>
 <section id="outlook">
 <h2>Outlook<a class="headerlink" href="#outlook" title="Permalink to this heading">#</a></h2>
-<p>This chapter is meant to equip you with some fundamentals of neural networks. We did this because the following language models are neural networks with specific architectures. The next chapter is dedicated to understand the Word2Vec and Doc2Vec approaches which can be interpreted as a simple forward neural network solving a multi-class classification task. Later in the course, we are going to discuss the BERT model whose architecture is defined by the transformer network which has a rather complex architecture and whose layers include an attention mechanism which can be used to learn how language works.</p>
+<p>This chapter is meant to equip you with some fundamentals of neural networks. We did this because the following language models are neural networks with specific architectures. The next two chapters are dedicated to understand the Word2Vec and Doc2Vec approaches which can be interpreted as a simple forward neural network solving a multi-class classification task. Later in the course, we are going to discuss the BERT model whose architecture is defined by the transformer network. This has a rather complex architecture, however, comes along with a very interesting layer design that includes an attention mechanism. The attention mechanism is an interesting way for language models to actually learn how human language works.</p>
 </section>
 </section>
 
@@ -844,8 +851,17 @@ acc =
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Text analysis without trained models</p>
+        <p class="prev-next-title">Model free text analysis</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="04_word_embeddings.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Word embeddings with Word2Vec</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
