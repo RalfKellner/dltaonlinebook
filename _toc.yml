@@ -9,4 +9,5 @@ chapters:
 - file: 03_neural_networks
 - file: 04_word_embeddings
 - file: 05_document_embeddings
+- file: 06_transformer
 

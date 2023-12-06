@@ -68,6 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = '04_word_embeddings';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Document embeddings with Doc2Vec" href="05_document_embeddings.html" />
     <link rel="prev" title="Neural networks" href="03_neural_networks.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -173,6 +174,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="02_frequency_dictionary_models.html">Model free text analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_neural_networks.html">Neural networks</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Word embeddings with Word2Vec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_document_embeddings.html">Document embeddings with Doc2Vec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_transformer.html">Attention!</a></li>
 </ul>
 
     </div>
@@ -504,9 +507,9 @@ document.write(`
         });
         }
         </script>
-        </div><div class="output text_html"><div>                            <div id="58d69a11-4cb4-458d-8a77-6c9c28793fa9" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("58d69a11-4cb4-458d-8a77-6c9c28793fa9")) {                    Plotly.newPlot(                        "58d69a11-4cb4-458d-8a77-6c9c28793fa9",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eweight=%{x}\u003cbr\u003esize=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Afghan hound","Airedale Terrier","American Staffordshire Terrier","Australian Shepherd","Borzoi","Basset","Beagle","Bearded Collie","Berger de Brie (Briard)","Saint Bernard","Bobtail","Border Collie","Boxer","Bull terrier","Chow-Chow","Collie","Dalmatian","Great Dane","German shepherd dog","Doberman pinscher","French bulldog","Golden Retriever","Greyhound","Havanese","Hovawart","Irish Red Setter","Leonberger","Lhasa Apso","Maltese","Pug","Small M\u00fcnsterl\u00e4nder","Large M\u00fcnsterl\u00e4nder","Newfoundland","Parson Russel Terrier","Rhodesian Ridgeback","Rottweiler","Standard Schnauzers","Shih Tzu","Siberian Husky","Sheltie (Shetland Sheepdog)","Staffordshire Bullterrier","Keeshond","Miniature Pinscher","Toy poodle","Miniature Schnauzer"],"legendgroup":"","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[25.0,22.5,16.0,24.0,36.0,24.0,14.0,24.0,25.0,77.5,32.5,16.0,27.5,25.0,24.0,24.0,28.0,67.5,35.0,36.0,11.0,32.0,39.5,5.5,32.5,27.5,60.0,6.0,3.5,7.5,22.5,27.0,57.5,7.0,39.5,50.0,16.0,6.5,22.0,9.0,14.0,23.0,6.5,5.0,6.5],"xaxis":"x","y":[68.5,58.5,45.5,52.0,76.5,33.0,37.0,53.5,62.0,75.0,60.0,51.0,58.0,47.5,47.5,56.0,57.0,76.0,60.0,66.5,29.5,56.0,73.5,25.0,64.0,64.5,72.5,26.0,22.5,27.5,55.0,61.5,68.5,35.0,65.0,61.5,47.5,26.0,55.5,37.0,35.0,50.0,31.5,31.5,32.5],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"weight"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"size"}},"legend":{"tracegroupgap":0},"title":{"text":"Dog breed vectorization"},"height":600,"width":800},                        {"responsive": true}                    ).then(function(){
+        </div><div class="output text_html"><div>                            <div id="2f5b08c1-7041-478d-ac69-f641b46a14cf" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("2f5b08c1-7041-478d-ac69-f641b46a14cf")) {                    Plotly.newPlot(                        "2f5b08c1-7041-478d-ac69-f641b46a14cf",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eweight=%{x}\u003cbr\u003esize=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Afghan hound","Airedale Terrier","American Staffordshire Terrier","Australian Shepherd","Borzoi","Basset","Beagle","Bearded Collie","Berger de Brie (Briard)","Saint Bernard","Bobtail","Border Collie","Boxer","Bull terrier","Chow-Chow","Collie","Dalmatian","Great Dane","German shepherd dog","Doberman pinscher","French bulldog","Golden Retriever","Greyhound","Havanese","Hovawart","Irish Red Setter","Leonberger","Lhasa Apso","Maltese","Pug","Small M\u00fcnsterl\u00e4nder","Large M\u00fcnsterl\u00e4nder","Newfoundland","Parson Russel Terrier","Rhodesian Ridgeback","Rottweiler","Standard Schnauzers","Shih Tzu","Siberian Husky","Sheltie (Shetland Sheepdog)","Staffordshire Bullterrier","Keeshond","Miniature Pinscher","Toy poodle","Miniature Schnauzer"],"legendgroup":"","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[25.0,22.5,16.0,24.0,36.0,24.0,14.0,24.0,25.0,77.5,32.5,16.0,27.5,25.0,24.0,24.0,28.0,67.5,35.0,36.0,11.0,32.0,39.5,5.5,32.5,27.5,60.0,6.0,3.5,7.5,22.5,27.0,57.5,7.0,39.5,50.0,16.0,6.5,22.0,9.0,14.0,23.0,6.5,5.0,6.5],"xaxis":"x","y":[68.5,58.5,45.5,52.0,76.5,33.0,37.0,53.5,62.0,75.0,60.0,51.0,58.0,47.5,47.5,56.0,57.0,76.0,60.0,66.5,29.5,56.0,73.5,25.0,64.0,64.5,72.5,26.0,22.5,27.5,55.0,61.5,68.5,35.0,65.0,61.5,47.5,26.0,55.5,37.0,35.0,50.0,31.5,31.5,32.5],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"weight"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"size"}},"legend":{"tracegroupgap":0},"title":{"text":"Dog breed vectorization"},"height":600,"width":800},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('58d69a11-4cb4-458d-8a77-6c9c28793fa9');
+var gd = document.getElementById('2f5b08c1-7041-478d-ac69-f641b46a14cf');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -752,22 +755,22 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 0.01495392, -0.02302353, -0.01693762],
-       [-0.01426685, -0.01562841,  0.02852112],
-       [-0.01475073, -0.03748515, -0.0470191 ],
-       [-0.01982504, -0.04494116, -0.03219104],
-       [ 0.03104523, -0.03924692, -0.03702109],
-       [-0.0100861 , -0.04285304, -0.00916003],
-       [-0.01085329, -0.0092746 , -0.03721492],
-       [ 0.00073166, -0.03807954, -0.03237075],
-       [ 0.01112958,  0.04740461,  0.03524012],
-       [-0.04818779, -0.04945533,  0.01366844],
-       [ 0.00081382,  0.00211855, -0.00448209],
-       [-0.03921913,  0.04255352, -0.04100549],
-       [-0.00427897, -0.03454553,  0.00461092],
-       [-0.0035379 ,  0.02241267, -0.0248917 ],
-       [-0.00825554,  0.02199091, -0.02927163],
-       [ 0.03215339, -0.03628786, -0.03884668]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-0.02402263, -0.03900371, -0.00402128],
+       [-0.04422183, -0.04319173, -0.00087307],
+       [-0.02940534,  0.02553957,  0.0254953 ],
+       [-0.0490728 ,  0.03436014, -0.03291108],
+       [ 0.02355974, -0.01979154, -0.02155557],
+       [-0.04959515,  0.03327522, -0.04528489],
+       [-0.00204678,  0.01069759,  0.04195168],
+       [-0.04523292, -0.03278454,  0.00543022],
+       [-0.00886378, -0.02555053,  0.04037986],
+       [-0.0276461 , -0.00592693, -0.04108335],
+       [ 0.01733393,  0.03657905,  0.04294021],
+       [-0.04871258, -0.01716169,  0.0286226 ],
+       [-0.03795887, -0.01894597,  0.02615926],
+       [ 0.00228393,  0.01125212, -0.01914089],
+       [ 0.04385941,  0.01112436, -0.02888563],
+       [ 0.03524275, -0.00778923, -0.02376263]], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -780,8 +783,8 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 0.01495392, -0.02302353, -0.01693762],
-       [-0.01475073, -0.03748515, -0.0470191 ]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-0.02402263, -0.03900371, -0.00402128],
+       [-0.02940534,  0.02553957,  0.0254953 ]], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -795,7 +798,7 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.00010159, -0.03025434, -0.03197836], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.02671399, -0.00673207,  0.01073701], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -811,18 +814,18 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([[ 0.3865292 , -0.2925256 , -0.01852441,  0.22491115,  0.21150124,
-         -0.29279113, -0.40327278, -0.01153713, -0.12018833, -0.07775536,
-          0.23039508,  0.02442437, -0.24079108,  0.45402187,  0.01035488,
-         -0.45410922],
-        [ 0.5281461 ,  0.05409735,  0.50234824, -0.25238112,  0.20590597,
-         -0.4523896 , -0.433643  ,  0.03962344,  0.26017606, -0.49320167,
-         -0.02820283,  0.01976252, -0.43032074, -0.46456057, -0.19488293,
-         -0.02634615],
-        [ 0.16898441, -0.4785869 ,  0.47403413,  0.4520622 , -0.23692241,
-          0.32524598, -0.26006365,  0.30500793,  0.48061973,  0.43149596,
-         -0.48685667,  0.4130904 , -0.04596961, -0.20458803,  0.33590335,
-          0.10100967]], dtype=float32)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([[-0.27922234,  0.5091943 ,  0.11853206, -0.13183159, -0.40210378,
+         -0.00942159, -0.5119228 , -0.15449369, -0.5303308 , -0.4636593 ,
+         -0.2906646 ,  0.15806317, -0.24446827, -0.36018717,  0.32932615,
+          0.40391707],
+        [ 0.39983445, -0.4608413 ,  0.43503964,  0.01144844,  0.488568  ,
+         -0.03262889, -0.48914087, -0.5260491 , -0.12084725, -0.44858363,
+          0.5536645 , -0.33262277, -0.3308156 ,  0.38095468,  0.3048764 ,
+         -0.31857002],
+        [ 0.10182828, -0.38076162, -0.337658  , -0.52663726,  0.0596621 ,
+          0.34845448, -0.25068346,  0.4778673 , -0.22907898, -0.38545924,
+         -0.42668518, -0.171998  ,  0.11543876, -0.10661352, -0.36797825,
+         -0.46431953]], dtype=float32)]
 </pre></div>
 </div>
 </div>
@@ -835,10 +838,10 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-0.02134329,  0.01363803, -0.03035893, -0.00679773,  0.00136833,
-         0.00325617,  0.02139502, -0.01095361, -0.0232531 ,  0.00111506,
-         0.01644554, -0.01380537,  0.01446464,  0.02064349, -0.00484453,
-        -0.00247917]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 0.00586076, -0.01458844, -0.00972062, -0.00220984,  0.00809331,
+         0.00421271,  0.01427684,  0.01279941,  0.01252118,  0.0112674 ,
+        -0.00054382, -0.00383   ,  0.00999726,  0.00591271, -0.01480105,
+        -0.013631  ]], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -852,10 +855,10 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.06125514, 0.06343585, 0.06070537, 0.06215264, 0.06266226,
-        0.06278067, 0.06392983, 0.06189488, 0.06113827, 0.0626464 ,
-        0.0636142 , 0.06171862, 0.0634883 , 0.0638818 , 0.06227416,
-        0.06242163]], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0.06276368, 0.06149324, 0.0617933 , 0.06225917, 0.06290395,
+        0.06266031, 0.06329413, 0.06320068, 0.06318311, 0.06310393,
+        0.06236298, 0.06215838, 0.06302384, 0.06276693, 0.06148016,
+        0.06155214]], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -868,7 +871,7 @@ if (outputEl) {{
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2.7577262], dtype=float32)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2.7888281], dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -985,7 +988,7 @@ Target values for the neural network:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d065b8af68506cde567ce86e9e3b82470abb092f775761d514e52dde8b388fb9.png" src="_images/d065b8af68506cde567ce86e9e3b82470abb092f775761d514e52dde8b388fb9.png" />
+<img alt="_images/ca40b44dbe12307e534288c6864ccc403322f179a8dacf18caa433d605a269f8.png" src="_images/ca40b44dbe12307e534288c6864ccc403322f179a8dacf18caa433d605a269f8.png" />
 </div>
 </div>
 <p>What does happen during training? In the beginning word embeddings for context words <span class="math notranslate nohighlight">\(\boldsymbol{W}\)</span> and center words <span class="math notranslate nohighlight">\(\boldsymbol{V}\)</span> are randomly initialized. Word embeddings of words which are close to each other need to produces high dot product values in order to come along with high probabilities. This is what we want if words are used in the same context (are close to each other in documents). A high dot product results if vectors have very similar elements. Thus, during training parameters for each word vector are updated such that words which are close to each other have similar vectors. In addition, words serve as anchors to recognize similarities between words that do not appear next to each other in documents but are used in similar contexts. One training is finished, it makes sense to use center word vectors <span class="math notranslate nohighlight">\(\boldsymbol{V}\)</span> as embeddings for our words. However, one may also experiment and can use context word vectors <span class="math notranslate nohighlight">\(\boldsymbol{W}\)</span> or the average vectors of both matrices. Our example is too small to produce high quality embeddings. However if you take a look at the cosine similarity matrix below, you can observe that, e.g., the model learned “sandwich” has a similar meaning to “dog” which makes sense, given our corpus information.</p>
@@ -1040,305 +1043,305 @@ Target values for the neural network:
     <tr>
       <th>the</th>
       <td>1.000000</td>
-      <td>0.999994</td>
-      <td>0.052103</td>
-      <td>-0.858353</td>
-      <td>-0.228779</td>
-      <td>0.820394</td>
-      <td>0.507646</td>
-      <td>0.999386</td>
-      <td>0.997357</td>
-      <td>0.802410</td>
-      <td>-0.434771</td>
-      <td>0.994828</td>
-      <td>0.999916</td>
-      <td>-0.403101</td>
-      <td>0.997055</td>
-      <td>0.992278</td>
+      <td>0.992713</td>
+      <td>-0.569011</td>
+      <td>-0.844104</td>
+      <td>-0.259121</td>
+      <td>-0.125753</td>
+      <td>0.057023</td>
+      <td>0.990675</td>
+      <td>0.988717</td>
+      <td>0.115658</td>
+      <td>0.285007</td>
+      <td>0.990269</td>
+      <td>0.991119</td>
+      <td>-0.977189</td>
+      <td>0.984926</td>
+      <td>0.998343</td>
     </tr>
     <tr>
       <th>dog</th>
-      <td>0.999994</td>
+      <td>0.992713</td>
       <td>1.000000</td>
-      <td>0.053294</td>
-      <td>-0.857753</td>
-      <td>-0.229179</td>
-      <td>0.819341</td>
-      <td>0.504997</td>
-      <td>0.999414</td>
-      <td>0.997456</td>
-      <td>0.804507</td>
-      <td>-0.431707</td>
-      <td>0.994928</td>
-      <td>0.999905</td>
-      <td>-0.406256</td>
-      <td>0.997141</td>
-      <td>0.992427</td>
+      <td>-0.654464</td>
+      <td>-0.779036</td>
+      <td>-0.144487</td>
+      <td>-0.213760</td>
+      <td>0.072014</td>
+      <td>0.999687</td>
+      <td>0.975915</td>
+      <td>0.203025</td>
+      <td>0.179465</td>
+      <td>0.998497</td>
+      <td>0.974073</td>
+      <td>-0.981573</td>
+      <td>0.995169</td>
+      <td>0.985364</td>
     </tr>
     <tr>
       <th>would</th>
-      <td>0.052103</td>
-      <td>0.053294</td>
+      <td>-0.569011</td>
+      <td>-0.654464</td>
       <td>1.000000</td>
-      <td>0.467615</td>
-      <td>-0.959189</td>
-      <td>-0.516883</td>
-      <td>0.180199</td>
-      <td>0.023763</td>
-      <td>-0.000286</td>
-      <td>0.180127</td>
-      <td>0.027668</td>
-      <td>-0.029379</td>
-      <td>0.063813</td>
-      <td>-0.517888</td>
-      <td>-0.007106</td>
-      <td>-0.042654</td>
+      <td>0.039462</td>
+      <td>-0.632429</td>
+      <td>0.387377</td>
+      <td>-0.475276</td>
+      <td>-0.656656</td>
+      <td>-0.578066</td>
+      <td>-0.374287</td>
+      <td>0.625905</td>
+      <td>-0.677818</td>
+      <td>-0.540241</td>
+      <td>0.693651</td>
+      <td>-0.634565</td>
+      <td>-0.521378</td>
     </tr>
     <tr>
       <th>like</th>
-      <td>-0.858353</td>
-      <td>-0.857753</td>
-      <td>0.467615</td>
+      <td>-0.844104</td>
+      <td>-0.779036</td>
+      <td>0.039462</td>
       <td>1.000000</td>
-      <td>-0.291376</td>
-      <td>-0.991112</td>
-      <td>-0.352466</td>
-      <td>-0.872473</td>
-      <td>-0.883183</td>
-      <td>-0.620628</td>
-      <td>0.394491</td>
-      <td>-0.895943</td>
-      <td>-0.852235</td>
-      <td>0.094622</td>
-      <td>-0.886411</td>
-      <td>-0.900604</td>
+      <td>0.728933</td>
+      <td>-0.108729</td>
+      <td>0.232293</td>
+      <td>-0.774889</td>
+      <td>-0.825952</td>
+      <td>0.112510</td>
+      <td>-0.754152</td>
+      <td>-0.761292</td>
+      <td>-0.853344</td>
+      <td>0.736417</td>
+      <td>-0.781601</td>
+      <td>-0.873051</td>
     </tr>
     <tr>
       <th>a</th>
-      <td>-0.228779</td>
-      <td>-0.229179</td>
-      <td>-0.959189</td>
-      <td>-0.291376</td>
+      <td>-0.259121</td>
+      <td>-0.144487</td>
+      <td>-0.632429</td>
+      <td>0.728933</td>
       <td>1.000000</td>
-      <td>0.318997</td>
-      <td>-0.447704</td>
-      <td>-0.197241</td>
-      <td>-0.167510</td>
-      <td>-0.187914</td>
-      <td>0.248452</td>
-      <td>-0.137137</td>
-      <td>-0.241092</td>
-      <td>0.396086</td>
-      <td>-0.161326</td>
-      <td>-0.119804</td>
+      <td>-0.498947</td>
+      <td>0.342161</td>
+      <td>-0.135595</td>
+      <td>-0.265532</td>
+      <td>0.494009</td>
+      <td>-0.979321</td>
+      <td>-0.123690</td>
+      <td>-0.307914</td>
+      <td>0.118412</td>
+      <td>-0.142719</td>
+      <td>-0.310824</td>
     </tr>
     <tr>
       <th>piece</th>
-      <td>0.820394</td>
-      <td>0.819341</td>
-      <td>-0.516883</td>
-      <td>-0.991112</td>
-      <td>0.318997</td>
+      <td>-0.125753</td>
+      <td>-0.213760</td>
+      <td>0.387377</td>
+      <td>-0.108729</td>
+      <td>-0.498947</td>
       <td>1.000000</td>
-      <td>0.426541</td>
-      <td>0.833433</td>
-      <td>0.841816</td>
-      <td>0.514697</td>
-      <td>-0.487115</td>
-      <td>0.854805</td>
-      <td>0.814377</td>
-      <td>0.035425</td>
-      <td>0.845567</td>
-      <td>0.857872</td>
+      <td>0.554995</td>
+      <td>-0.237570</td>
+      <td>0.004370</td>
+      <td>-0.999897</td>
+      <td>0.315241</td>
+      <td>-0.183138</td>
+      <td>0.005182</td>
+      <td>0.067562</td>
+      <td>-0.293518</td>
+      <td>-0.112309</td>
     </tr>
     <tr>
       <th>of</th>
-      <td>0.507646</td>
-      <td>0.504997</td>
-      <td>0.180199</td>
-      <td>-0.352466</td>
-      <td>-0.447704</td>
-      <td>0.426541</td>
+      <td>0.057023</td>
+      <td>0.072014</td>
+      <td>-0.475276</td>
+      <td>0.232293</td>
+      <td>0.342161</td>
+      <td>0.554995</td>
       <td>1.000000</td>
-      <td>0.485504</td>
-      <td>0.455510</td>
-      <td>-0.063406</td>
-      <td>-0.975143</td>
-      <td>0.440906</td>
-      <td>0.514078</td>
-      <td>0.369861</td>
-      <td>0.455657</td>
-      <td>0.421061</td>
+      <td>0.053412</td>
+      <td>0.191445</td>
+      <td>-0.564606</td>
+      <td>-0.515429</td>
+      <td>0.126561</td>
+      <td>0.150119</td>
+      <td>-0.255761</td>
+      <td>-0.019403</td>
+      <td>0.018476</td>
     </tr>
     <tr>
       <th>sandwich</th>
-      <td>0.999386</td>
-      <td>0.999414</td>
-      <td>0.023763</td>
-      <td>-0.872473</td>
-      <td>-0.197241</td>
-      <td>0.833433</td>
-      <td>0.485504</td>
+      <td>0.990675</td>
+      <td>0.999687</td>
+      <td>-0.656656</td>
+      <td>-0.774889</td>
+      <td>-0.135595</td>
+      <td>-0.237570</td>
+      <td>0.053412</td>
       <td>1.000000</td>
-      <td>0.999266</td>
-      <td>0.809950</td>
-      <td>-0.417407</td>
-      <td>0.997776</td>
-      <td>0.998856</td>
-      <td>-0.404574</td>
-      <td>0.999125</td>
-      <td>0.996002</td>
+      <td>0.970321</td>
+      <td>0.226942</td>
+      <td>0.175436</td>
+      <td>0.997185</td>
+      <td>0.968743</td>
+      <td>-0.977048</td>
+      <td>0.997161</td>
+      <td>0.983328</td>
     </tr>
     <tr>
       <th>i</th>
-      <td>0.997357</td>
-      <td>0.997456</td>
-      <td>-0.000286</td>
-      <td>-0.883183</td>
-      <td>-0.167510</td>
-      <td>0.841816</td>
-      <td>0.455510</td>
-      <td>0.999266</td>
+      <td>0.988717</td>
+      <td>0.975915</td>
+      <td>-0.578066</td>
+      <td>-0.825952</td>
+      <td>-0.265532</td>
+      <td>0.004370</td>
+      <td>0.191445</td>
+      <td>0.970321</td>
       <td>1.000000</td>
-      <td>0.822307</td>
-      <td>-0.390927</td>
-      <td>0.999522</td>
-      <td>0.996382</td>
-      <td>-0.414726</td>
-      <td>0.999975</td>
-      <td>0.998650</td>
+      <td>-0.015265</td>
+      <td>0.260998</td>
+      <td>0.980867</td>
+      <td>0.998685</td>
+      <td>-0.988743</td>
+      <td>0.953571</td>
+      <td>0.984618</td>
     </tr>
     <tr>
       <th>to</th>
-      <td>0.802410</td>
-      <td>0.804507</td>
-      <td>0.180127</td>
-      <td>-0.620628</td>
-      <td>-0.187914</td>
-      <td>0.514697</td>
-      <td>-0.063406</td>
-      <td>0.809950</td>
-      <td>0.822307</td>
+      <td>0.115658</td>
+      <td>0.203025</td>
+      <td>-0.374287</td>
+      <td>0.112510</td>
+      <td>0.494009</td>
+      <td>-0.999897</td>
+      <td>-0.564606</td>
+      <td>0.226942</td>
+      <td>-0.015265</td>
       <td>1.000000</td>
-      <td>0.180040</td>
-      <td>0.822325</td>
-      <td>0.800770</td>
-      <td>-0.838220</td>
-      <td>0.820198</td>
-      <td>0.829772</td>
+      <td>-0.309463</td>
+      <td>0.171928</td>
+      <td>-0.015581</td>
+      <td>-0.055546</td>
+      <td>0.283512</td>
+      <td>0.102786</td>
     </tr>
     <tr>
       <th>eat</th>
-      <td>-0.434771</td>
-      <td>-0.431707</td>
-      <td>0.027668</td>
-      <td>0.394491</td>
-      <td>0.248452</td>
-      <td>-0.487115</td>
-      <td>-0.975143</td>
-      <td>-0.417407</td>
-      <td>-0.390927</td>
-      <td>0.180040</td>
+      <td>0.285007</td>
+      <td>0.179465</td>
+      <td>0.625905</td>
+      <td>-0.754152</td>
+      <td>-0.979321</td>
+      <td>0.315241</td>
+      <td>-0.515429</td>
+      <td>0.175436</td>
+      <td>0.260998</td>
+      <td>-0.309463</td>
       <td>1.000000</td>
-      <td>-0.381896</td>
-      <td>-0.439096</td>
-      <td>-0.540416</td>
-      <td>-0.392570</td>
-      <td>-0.363924</td>
+      <td>0.149082</td>
+      <td>0.307704</td>
+      <td>-0.115695</td>
+      <td>0.197057</td>
+      <td>0.339121</td>
     </tr>
     <tr>
       <th>ice</th>
-      <td>0.994828</td>
-      <td>0.994928</td>
-      <td>-0.029379</td>
-      <td>-0.895943</td>
-      <td>-0.137137</td>
-      <td>0.854805</td>
-      <td>0.440906</td>
-      <td>0.997776</td>
-      <td>0.999522</td>
-      <td>0.822325</td>
-      <td>-0.381896</td>
+      <td>0.990269</td>
+      <td>0.998497</td>
+      <td>-0.677818</td>
+      <td>-0.761292</td>
+      <td>-0.123690</td>
+      <td>-0.183138</td>
+      <td>0.126561</td>
+      <td>0.997185</td>
+      <td>0.980867</td>
+      <td>0.171928</td>
+      <td>0.149082</td>
       <td>1.000000</td>
-      <td>0.993455</td>
-      <td>-0.407301</td>
-      <td>0.999679</td>
-      <td>0.999720</td>
+      <td>0.976726</td>
+      <td>-0.990206</td>
+      <td>0.988717</td>
+      <td>0.980787</td>
     </tr>
     <tr>
       <th>cream</th>
-      <td>0.999916</td>
-      <td>0.999905</td>
-      <td>0.063813</td>
-      <td>-0.852235</td>
-      <td>-0.241092</td>
-      <td>0.814377</td>
-      <td>0.514078</td>
-      <td>0.998856</td>
-      <td>0.996382</td>
-      <td>0.800770</td>
-      <td>-0.439096</td>
-      <td>0.993455</td>
+      <td>0.991119</td>
+      <td>0.974073</td>
+      <td>-0.540241</td>
+      <td>-0.853344</td>
+      <td>-0.307914</td>
+      <td>0.005182</td>
+      <td>0.150119</td>
+      <td>0.968743</td>
+      <td>0.998685</td>
+      <td>-0.015581</td>
+      <td>0.307704</td>
+      <td>0.976726</td>
       <td>1.000000</td>
-      <td>-0.404673</td>
-      <td>0.996009</td>
-      <td>0.990644</td>
+      <td>-0.980657</td>
+      <td>0.954414</td>
+      <td>0.989898</td>
     </tr>
     <tr>
       <th>is</th>
-      <td>-0.403101</td>
-      <td>-0.406256</td>
-      <td>-0.517888</td>
-      <td>0.094622</td>
-      <td>0.396086</td>
-      <td>0.035425</td>
-      <td>0.369861</td>
-      <td>-0.404574</td>
-      <td>-0.414726</td>
-      <td>-0.838220</td>
-      <td>-0.540416</td>
-      <td>-0.407301</td>
-      <td>-0.404673</td>
+      <td>-0.977189</td>
+      <td>-0.981573</td>
+      <td>0.693651</td>
+      <td>0.736417</td>
+      <td>0.118412</td>
+      <td>0.067562</td>
+      <td>-0.255761</td>
+      <td>-0.977048</td>
+      <td>-0.988743</td>
+      <td>-0.055546</td>
+      <td>-0.115695</td>
+      <td>-0.990206</td>
+      <td>-0.980657</td>
       <td>1.000000</td>
-      <td>-0.409992</td>
-      <td>-0.414698</td>
+      <td>-0.958243</td>
+      <td>-0.964842</td>
     </tr>
     <tr>
       <th>good</th>
-      <td>0.997055</td>
-      <td>0.997141</td>
-      <td>-0.007106</td>
-      <td>-0.886411</td>
-      <td>-0.161326</td>
-      <td>0.845567</td>
-      <td>0.455657</td>
-      <td>0.999125</td>
-      <td>0.999975</td>
-      <td>0.820198</td>
-      <td>-0.392570</td>
-      <td>0.999679</td>
-      <td>0.996009</td>
-      <td>-0.409992</td>
+      <td>0.984926</td>
+      <td>0.995169</td>
+      <td>-0.634565</td>
+      <td>-0.781601</td>
+      <td>-0.142719</td>
+      <td>-0.293518</td>
+      <td>-0.019403</td>
+      <td>0.997161</td>
+      <td>0.953571</td>
+      <td>0.283512</td>
+      <td>0.197057</td>
+      <td>0.988717</td>
+      <td>0.954414</td>
+      <td>-0.958243</td>
       <td>1.000000</td>
-      <td>0.998867</td>
+      <td>0.979558</td>
     </tr>
     <tr>
       <th>friend</th>
-      <td>0.992278</td>
-      <td>0.992427</td>
-      <td>-0.042654</td>
-      <td>-0.900604</td>
-      <td>-0.119804</td>
-      <td>0.857872</td>
-      <td>0.421061</td>
-      <td>0.996002</td>
-      <td>0.998650</td>
-      <td>0.829772</td>
-      <td>-0.363924</td>
-      <td>0.999720</td>
-      <td>0.990644</td>
-      <td>-0.414698</td>
-      <td>0.998867</td>
+      <td>0.998343</td>
+      <td>0.985364</td>
+      <td>-0.521378</td>
+      <td>-0.873051</td>
+      <td>-0.310824</td>
+      <td>-0.112309</td>
+      <td>0.018476</td>
+      <td>0.983328</td>
+      <td>0.984618</td>
+      <td>0.102786</td>
+      <td>0.339121</td>
+      <td>0.980787</td>
+      <td>0.989898</td>
+      <td>-0.964842</td>
+      <td>0.979558</td>
       <td>1.000000</td>
     </tr>
   </tbody>
@@ -1486,7 +1489,7 @@ Target values for the neural network:
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/dacdd5ccc136beb101922c39e0f4de243b5f31a5e594aa45a4aa2be1221b3d9a.png" src="_images/dacdd5ccc136beb101922c39e0f4de243b5f31a5e594aa45a4aa2be1221b3d9a.png" />
+<img alt="_images/1e6d8bd8b7e5b40cdffdfc62eed40282e44e0a0466260077f0a06931c56b381a.png" src="_images/1e6d8bd8b7e5b40cdffdfc62eed40282e44e0a0466260077f0a06931c56b381a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1538,305 +1541,305 @@ Target values for the neural network:
     <tr>
       <th>the</th>
       <td>1.000000</td>
-      <td>0.519188</td>
-      <td>0.888126</td>
-      <td>0.654443</td>
-      <td>0.621221</td>
-      <td>0.868181</td>
-      <td>0.120068</td>
-      <td>-0.238020</td>
-      <td>-0.061622</td>
-      <td>-0.174366</td>
-      <td>-0.530768</td>
-      <td>-0.663885</td>
-      <td>-0.204336</td>
-      <td>0.958785</td>
-      <td>0.719011</td>
-      <td>-0.438949</td>
+      <td>0.506905</td>
+      <td>-0.898370</td>
+      <td>0.273669</td>
+      <td>0.056089</td>
+      <td>-0.971824</td>
+      <td>0.143357</td>
+      <td>-0.087428</td>
+      <td>-0.546204</td>
+      <td>-0.304381</td>
+      <td>-0.111767</td>
+      <td>0.760103</td>
+      <td>-0.291218</td>
+      <td>-0.413814</td>
+      <td>-0.753698</td>
+      <td>0.604845</td>
     </tr>
     <tr>
       <th>dog</th>
-      <td>0.519188</td>
+      <td>0.506905</td>
       <td>1.000000</td>
-      <td>0.401031</td>
-      <td>0.035252</td>
-      <td>0.797469</td>
-      <td>0.474814</td>
-      <td>-0.751962</td>
-      <td>-0.952738</td>
-      <td>0.384994</td>
-      <td>0.301313</td>
-      <td>0.447981</td>
-      <td>-0.203665</td>
-      <td>0.693874</td>
-      <td>0.308010</td>
-      <td>0.350638</td>
-      <td>0.047204</td>
+      <td>-0.170791</td>
+      <td>0.809659</td>
+      <td>0.768838</td>
+      <td>-0.407567</td>
+      <td>0.102344</td>
+      <td>0.813442</td>
+      <td>0.166537</td>
+      <td>-0.491918</td>
+      <td>-0.586455</td>
+      <td>0.296553</td>
+      <td>-0.971739</td>
+      <td>0.543286</td>
+      <td>-0.423645</td>
+      <td>-0.344293</td>
     </tr>
     <tr>
       <th>would</th>
-      <td>0.888126</td>
-      <td>0.401031</td>
+      <td>-0.898370</td>
+      <td>-0.170791</td>
       <td>1.000000</td>
-      <td>0.303373</td>
-      <td>0.261711</td>
-      <td>0.994104</td>
-      <td>0.046917</td>
-      <td>-0.164146</td>
-      <td>-0.484499</td>
-      <td>0.208715</td>
-      <td>-0.512933</td>
-      <td>-0.932503</td>
-      <td>-0.117088</td>
-      <td>0.786616</td>
-      <td>0.955871</td>
-      <td>-0.031453</td>
+      <td>0.174818</td>
+      <td>0.085740</td>
+      <td>0.967649</td>
+      <td>0.169115</td>
+      <td>0.420585</td>
+      <td>0.469003</td>
+      <td>-0.107416</td>
+      <td>-0.328732</td>
+      <td>-0.902716</td>
+      <td>-0.044179</td>
+      <td>0.734370</td>
+      <td>0.471285</td>
+      <td>-0.719387</td>
     </tr>
     <tr>
       <th>like</th>
-      <td>0.654443</td>
-      <td>0.035252</td>
-      <td>0.303373</td>
+      <td>0.273669</td>
+      <td>0.809659</td>
+      <td>0.174818</td>
       <td>1.000000</td>
-      <td>0.577019</td>
-      <td>0.227731</td>
-      <td>0.604079</td>
-      <td>0.220667</td>
-      <td>0.366505</td>
-      <td>-0.858626</td>
-      <td>-0.675384</td>
-      <td>-0.006831</td>
-      <td>-0.658377</td>
-      <td>0.824808</td>
-      <td>0.016849</td>
-      <td>-0.961399</td>
+      <td>0.396289</td>
+      <td>-0.068201</td>
+      <td>0.624906</td>
+      <td>0.776936</td>
+      <td>-0.122660</td>
+      <td>-0.878793</td>
+      <td>-0.950202</td>
+      <td>-0.234653</td>
+      <td>-0.804627</td>
+      <td>0.711410</td>
+      <td>-0.614181</td>
+      <td>-0.279250</td>
     </tr>
     <tr>
       <th>a</th>
-      <td>0.621221</td>
-      <td>0.797469</td>
-      <td>0.261711</td>
-      <td>0.577019</td>
+      <td>0.056089</td>
+      <td>0.768838</td>
+      <td>0.085740</td>
+      <td>0.396289</td>
       <td>1.000000</td>
-      <td>0.281233</td>
-      <td>-0.300760</td>
-      <td>-0.661507</td>
-      <td>0.713938</td>
-      <td>-0.335026</td>
-      <td>0.118882</td>
-      <td>0.082281</td>
-      <td>0.234843</td>
-      <td>0.570164</td>
-      <td>0.048208</td>
-      <td>-0.557307</td>
+      <td>-0.078713</td>
+      <td>-0.465824</td>
+      <td>0.826074</td>
+      <td>0.747699</td>
+      <td>0.088464</td>
+      <td>-0.136726</td>
+      <td>0.280773</td>
+      <td>-0.854827</td>
+      <td>0.596826</td>
+      <td>0.249904</td>
+      <td>-0.743418</td>
     </tr>
     <tr>
       <th>piece</th>
-      <td>0.868181</td>
-      <td>0.474814</td>
-      <td>0.994104</td>
-      <td>0.227731</td>
-      <td>0.281233</td>
+      <td>-0.971824</td>
+      <td>-0.407567</td>
+      <td>0.967649</td>
+      <td>-0.068201</td>
+      <td>-0.078713</td>
       <td>1.000000</td>
-      <td>-0.060781</td>
-      <td>-0.256809</td>
-      <td>-0.471160</td>
-      <td>0.293278</td>
-      <td>-0.417372</td>
-      <td>-0.933110</td>
-      <td>-0.009043</td>
-      <td>0.738320</td>
-      <td>0.967570</td>
-      <td>0.043597</td>
+      <td>0.075802</td>
+      <td>0.193132</td>
+      <td>0.440053</td>
+      <td>0.071288</td>
+      <td>-0.119182</td>
+      <td>-0.886186</td>
+      <td>0.195954</td>
+      <td>0.543169</td>
+      <td>0.587394</td>
+      <td>-0.608156</td>
     </tr>
     <tr>
       <th>of</th>
-      <td>0.120068</td>
-      <td>-0.751962</td>
-      <td>0.046917</td>
-      <td>0.604079</td>
-      <td>-0.300760</td>
-      <td>-0.060781</td>
+      <td>0.143357</td>
+      <td>0.102344</td>
+      <td>0.169115</td>
+      <td>0.624906</td>
+      <td>-0.465824</td>
+      <td>0.075802</td>
       <td>1.000000</td>
-      <td>0.908635</td>
-      <td>-0.229389</td>
-      <td>-0.700829</td>
-      <td>-0.881374</td>
-      <td>-0.033465</td>
-      <td>-0.996279</td>
-      <td>0.376131</td>
-      <td>-0.082117</td>
-      <td>-0.593373</td>
+      <td>0.067843</td>
+      <td>-0.714472</td>
+      <td>-0.915929</td>
+      <td>-0.809517</td>
+      <td>-0.529162</td>
+      <td>-0.041039</td>
+      <td>0.224020</td>
+      <td>-0.757994</td>
+      <td>0.310926</td>
     </tr>
     <tr>
       <th>sandwich</th>
-      <td>-0.238020</td>
-      <td>-0.952738</td>
-      <td>-0.164146</td>
-      <td>0.220667</td>
-      <td>-0.661507</td>
-      <td>-0.256809</td>
-      <td>0.908635</td>
+      <td>-0.087428</td>
+      <td>0.813442</td>
+      <td>0.420585</td>
+      <td>0.776936</td>
+      <td>0.826074</td>
+      <td>0.193132</td>
+      <td>0.067843</td>
       <td>1.000000</td>
-      <td>-0.418520</td>
-      <td>-0.443483</td>
-      <td>-0.696826</td>
-      <td>0.031581</td>
-      <td>-0.872658</td>
-      <td>-0.004607</td>
-      <td>-0.177440</td>
-      <td>-0.246488</td>
+      <td>0.528791</td>
+      <td>-0.403625</td>
+      <td>-0.638231</td>
+      <td>-0.198819</td>
+      <td>-0.924302</td>
+      <td>0.917426</td>
+      <td>-0.012681</td>
+      <td>-0.792461</td>
     </tr>
     <tr>
       <th>i</th>
-      <td>-0.061622</td>
-      <td>0.384994</td>
-      <td>-0.484499</td>
-      <td>0.366505</td>
-      <td>0.713938</td>
-      <td>-0.471160</td>
-      <td>-0.229389</td>
-      <td>-0.418520</td>
+      <td>-0.546204</td>
+      <td>0.166537</td>
+      <td>0.469003</td>
+      <td>-0.122660</td>
+      <td>0.747699</td>
+      <td>0.440053</td>
+      <td>-0.714472</td>
+      <td>0.528791</td>
       <td>1.000000</td>
-      <td>-0.524341</td>
-      <td>0.411325</td>
-      <td>0.756521</td>
-      <td>0.219705</td>
-      <td>-0.013072</td>
-      <td>-0.661955</td>
-      <td>-0.546333</td>
+      <td>0.538813</td>
+      <td>0.261127</td>
+      <td>-0.043969</td>
+      <td>-0.355199</td>
+      <td>0.506120</td>
+      <td>0.820172</td>
+      <td>-0.886030</td>
     </tr>
     <tr>
       <th>to</th>
-      <td>-0.174366</td>
-      <td>0.301313</td>
-      <td>0.208715</td>
-      <td>-0.858626</td>
-      <td>-0.335026</td>
-      <td>0.293278</td>
-      <td>-0.700829</td>
-      <td>-0.443483</td>
-      <td>-0.524341</td>
+      <td>-0.304381</td>
+      <td>-0.491918</td>
+      <td>-0.107416</td>
+      <td>-0.878793</td>
+      <td>0.088464</td>
+      <td>0.071288</td>
+      <td>-0.915929</td>
+      <td>-0.403625</td>
+      <td>0.538813</td>
       <td>1.000000</td>
-      <td>0.515155</td>
-      <td>-0.444221</td>
-      <td>0.714530</td>
-      <td>-0.423462</td>
-      <td>0.467674</td>
-      <td>0.955139</td>
+      <td>0.952777</td>
+      <td>0.366060</td>
+      <td>0.433587</td>
+      <td>-0.438556</td>
+      <td>0.817434</td>
+      <td>-0.108011</td>
     </tr>
     <tr>
       <th>eat</th>
-      <td>-0.530768</td>
-      <td>0.447981</td>
-      <td>-0.512933</td>
-      <td>-0.675384</td>
-      <td>0.118882</td>
-      <td>-0.417372</td>
-      <td>-0.881374</td>
-      <td>-0.696826</td>
-      <td>0.411325</td>
-      <td>0.515155</td>
+      <td>-0.111767</td>
+      <td>-0.586455</td>
+      <td>-0.328732</td>
+      <td>-0.950202</td>
+      <td>-0.136726</td>
+      <td>-0.119182</td>
+      <td>-0.809517</td>
+      <td>-0.638231</td>
+      <td>0.261127</td>
+      <td>0.952777</td>
       <td>1.000000</td>
-      <td>0.463209</td>
-      <td>0.912203</td>
-      <td>-0.703892</td>
-      <td>-0.376613</td>
-      <td>0.538660</td>
+      <td>0.479324</td>
+      <td>0.593608</td>
+      <td>-0.690636</td>
+      <td>0.625712</td>
+      <td>0.198948</td>
     </tr>
     <tr>
       <th>ice</th>
-      <td>-0.663885</td>
-      <td>-0.203665</td>
-      <td>-0.932503</td>
-      <td>-0.006831</td>
-      <td>0.082281</td>
-      <td>-0.933110</td>
-      <td>-0.033465</td>
-      <td>0.031581</td>
-      <td>0.756521</td>
-      <td>-0.444221</td>
-      <td>0.463209</td>
+      <td>0.760103</td>
+      <td>0.296553</td>
+      <td>-0.902716</td>
+      <td>-0.234653</td>
+      <td>0.280773</td>
+      <td>-0.886186</td>
+      <td>-0.529162</td>
+      <td>-0.198819</td>
+      <td>-0.043969</td>
+      <td>0.366060</td>
+      <td>0.479324</td>
       <td>1.000000</td>
-      <td>0.081036</td>
-      <td>-0.543862</td>
-      <td>-0.988283</td>
-      <td>-0.267360</td>
+      <td>-0.144737</td>
+      <td>-0.568774</td>
+      <td>-0.147388</td>
+      <td>0.375175</td>
     </tr>
     <tr>
       <th>cream</th>
-      <td>-0.204336</td>
-      <td>0.693874</td>
-      <td>-0.117088</td>
-      <td>-0.658377</td>
-      <td>0.234843</td>
-      <td>-0.009043</td>
-      <td>-0.996279</td>
-      <td>-0.872658</td>
-      <td>0.219705</td>
-      <td>0.714530</td>
-      <td>0.912203</td>
-      <td>0.081036</td>
+      <td>-0.291218</td>
+      <td>-0.971739</td>
+      <td>-0.044179</td>
+      <td>-0.804627</td>
+      <td>-0.854827</td>
+      <td>0.195954</td>
+      <td>-0.041039</td>
+      <td>-0.924302</td>
+      <td>-0.355199</td>
+      <td>0.433587</td>
+      <td>0.593608</td>
+      <td>-0.144737</td>
       <td>1.000000</td>
-      <td>-0.454564</td>
-      <td>0.027310</td>
-      <td>0.631411</td>
+      <td>-0.705998</td>
+      <td>0.243338</td>
+      <td>0.554366</td>
     </tr>
     <tr>
       <th>is</th>
-      <td>0.958785</td>
-      <td>0.308010</td>
-      <td>0.786616</td>
-      <td>0.824808</td>
-      <td>0.570164</td>
-      <td>0.738320</td>
-      <td>0.376131</td>
-      <td>-0.004607</td>
-      <td>-0.013072</td>
-      <td>-0.423462</td>
-      <td>-0.703892</td>
-      <td>-0.543862</td>
-      <td>-0.454564</td>
+      <td>-0.413814</td>
+      <td>0.543286</td>
+      <td>0.734370</td>
+      <td>0.711410</td>
+      <td>0.596826</td>
+      <td>0.543169</td>
+      <td>0.224020</td>
+      <td>0.917426</td>
+      <td>0.506120</td>
+      <td>-0.438556</td>
+      <td>-0.690636</td>
+      <td>-0.568774</td>
+      <td>-0.705998</td>
       <td>1.000000</td>
-      <td>0.572156</td>
-      <td>-0.641038</td>
+      <td>0.101902</td>
+      <td>-0.845168</td>
     </tr>
     <tr>
       <th>good</th>
-      <td>0.719011</td>
-      <td>0.350638</td>
-      <td>0.955871</td>
-      <td>0.016849</td>
-      <td>0.048208</td>
-      <td>0.967570</td>
-      <td>-0.082117</td>
-      <td>-0.177440</td>
-      <td>-0.661955</td>
-      <td>0.467674</td>
-      <td>-0.376613</td>
-      <td>-0.988283</td>
-      <td>0.027310</td>
-      <td>0.572156</td>
+      <td>-0.753698</td>
+      <td>-0.423645</td>
+      <td>0.471285</td>
+      <td>-0.614181</td>
+      <td>0.249904</td>
+      <td>0.587394</td>
+      <td>-0.757994</td>
+      <td>-0.012681</td>
+      <td>0.820172</td>
+      <td>0.817434</td>
+      <td>0.625712</td>
+      <td>-0.147388</td>
+      <td>0.243338</td>
+      <td>0.101902</td>
       <td>1.000000</td>
-      <td>0.258449</td>
+      <td>-0.585251</td>
     </tr>
     <tr>
       <th>friend</th>
-      <td>-0.438949</td>
-      <td>0.047204</td>
-      <td>-0.031453</td>
-      <td>-0.961399</td>
-      <td>-0.557307</td>
-      <td>0.043597</td>
-      <td>-0.593373</td>
-      <td>-0.246488</td>
-      <td>-0.546333</td>
-      <td>0.955139</td>
-      <td>0.538660</td>
-      <td>-0.267360</td>
-      <td>0.631411</td>
-      <td>-0.641038</td>
-      <td>0.258449</td>
+      <td>0.604845</td>
+      <td>-0.344293</td>
+      <td>-0.719387</td>
+      <td>-0.279250</td>
+      <td>-0.743418</td>
+      <td>-0.608156</td>
+      <td>0.310926</td>
+      <td>-0.792461</td>
+      <td>-0.886030</td>
+      <td>-0.108011</td>
+      <td>0.198948</td>
+      <td>0.375175</td>
+      <td>0.554366</td>
+      <td>-0.845168</td>
+      <td>-0.585251</td>
       <td>1.000000</td>
     </tr>
   </tbody>
@@ -1889,7 +1892,8 @@ Target values for the neural network:
 <p>We observe cosine similarities in the range between <span class="math notranslate nohighlight">\(0.53\)</span> and <span class="math notranslate nohighlight">\(0.63\)</span>. This brings up the question about the actual range of cosine similarities for all word embeddings. Due to the immense amount of words, we sample 10,000 words from the lexicon and determine their pairwise cosine similarities. The histogram below demonstrates that similarities seem to be roughly in the range <span class="math notranslate nohighlight">\([-0.25, 0.80]\)</span>, even though values in the interval <span class="math notranslate nohighlight">\([-1, 1]\)</span> would be possible. This gives us a better understanding of common similarity levels for word pairs are.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">default_rng</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">default_rng</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">cosine_similarity</span>
 
@@ -2058,137 +2062,18 @@ Pairwise cosine similarities:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">umap</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 
-<span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
-<span class="n">rnd_idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">dim_reducer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">[</span><span class="n">rnd_idx</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">31</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">rnd_idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">dim_reducer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">[</span><span class="n">rnd_idx</span><span class="p">])</span>
-
-<span class="nn">File ~/Library/Mobile Documents/com~apple~CloudDocs/Kurse/DLTA/.venv/lib/python3.11/site-packages/umap/umap_.py:2780,</span> in <span class="ni">UMAP.fit</span><span class="nt">(self, X, y, force_all_finite)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2776</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_mode</span> <span class="o">==</span> <span class="s2">&quot;embedding&quot;</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">2777</span>     <span class="n">epochs</span> <span class="o">=</span> <span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2778</span>         <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs_list</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs</span>
-<span class="g g-Whitespace">   </span><span class="mi">2779</span>     <span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">2780</span>     <span class="bp">self</span><span class="o">.</span><span class="n">embedding_</span><span class="p">,</span> <span class="n">aux_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit_embed_data</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2781</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
-<span class="g g-Whitespace">   </span><span class="mi">2782</span>         <span class="n">epochs</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2783</span>         <span class="n">init</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2784</span>         <span class="n">random_state</span><span class="p">,</span>  <span class="c1"># JH why raw data?</span>
-<span class="g g-Whitespace">   </span><span class="mi">2785</span>     <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2787</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_epochs_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">2788</span>         <span class="k">if</span> <span class="s2">&quot;embedding_list&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">aux_data</span><span class="p">:</span>
-
-<span class="nn">File ~/Library/Mobile Documents/com~apple~CloudDocs/Kurse/DLTA/.venv/lib/python3.11/site-packages/umap/umap_.py:2826,</span> in <span class="ni">UMAP._fit_embed_data</span><span class="nt">(self, X, n_epochs, init, random_state)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2822</span> <span class="k">def</span> <span class="nf">_fit_embed_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">n_epochs</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">random_state</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">2823</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;A method wrapper for simplicial_set_embedding that can be</span>
-<span class="g g-Whitespace">   </span><span class="mi">2824</span><span class="sd">     replaced by subclasses.</span>
-<span class="g g-Whitespace">   </span><span class="mi">2825</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">2826</span>     <span class="k">return</span> <span class="n">simplicial_set_embedding</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2827</span>         <span class="n">X</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2828</span>         <span class="bp">self</span><span class="o">.</span><span class="n">graph_</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2829</span>         <span class="bp">self</span><span class="o">.</span><span class="n">n_components</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2830</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_alpha</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2831</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2832</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2833</span>         <span class="bp">self</span><span class="o">.</span><span class="n">repulsion_strength</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2834</span>         <span class="bp">self</span><span class="o">.</span><span class="n">negative_sample_rate</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2835</span>         <span class="n">n_epochs</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2836</span>         <span class="n">init</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2837</span>         <span class="n">random_state</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2838</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_input_distance_func</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2839</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_metric_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2840</span>         <span class="bp">self</span><span class="o">.</span><span class="n">densmap</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2841</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_densmap_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2842</span>         <span class="bp">self</span><span class="o">.</span><span class="n">output_dens</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2843</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_output_distance_func</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2844</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_output_metric_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2845</span>         <span class="bp">self</span><span class="o">.</span><span class="n">output_metric</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span> <span class="s2">&quot;l2&quot;</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">2846</span>         <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2847</span>         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2848</span>         <span class="n">tqdm_kwds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tqdm_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2849</span>     <span class="p">)</span>
-
-<span class="nn">File ~/Library/Mobile Documents/com~apple~CloudDocs/Kurse/DLTA/.venv/lib/python3.11/site-packages/umap/umap_.py:1192,</span> in <span class="ni">simplicial_set_embedding</span><span class="nt">(data, graph, n_components, initial_alpha, a, b, gamma, negative_sample_rate, n_epochs, init, random_state, metric, metric_kwds, densmap, densmap_kwds, output_dens, output_metric, output_metric_kwds, euclidean_output, parallel, verbose, tqdm_kwds)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1185</span> <span class="n">embedding</span> <span class="o">=</span> <span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1186</span>     <span class="mf">10.0</span>
-<span class="g g-Whitespace">   </span><span class="mi">1187</span>     <span class="o">*</span> <span class="p">(</span><span class="n">embedding</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">1188</span>     <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">1189</span> <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1191</span> <span class="k">if</span> <span class="n">euclidean_output</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1192</span>     <span class="n">embedding</span> <span class="o">=</span> <span class="n">optimize_layout_euclidean</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1193</span>         <span class="n">embedding</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1194</span>         <span class="n">embedding</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1195</span>         <span class="n">head</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1196</span>         <span class="n">tail</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1197</span>         <span class="n">n_epochs</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1198</span>         <span class="n">n_vertices</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1199</span>         <span class="n">epochs_per_sample</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1200</span>         <span class="n">a</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1201</span>         <span class="n">b</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1202</span>         <span class="n">rng_state</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1203</span>         <span class="n">gamma</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1204</span>         <span class="n">initial_alpha</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1205</span>         <span class="n">negative_sample_rate</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1206</span>         <span class="n">parallel</span><span class="o">=</span><span class="n">parallel</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1207</span>         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1208</span>         <span class="n">densmap</span><span class="o">=</span><span class="n">densmap</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1209</span>         <span class="n">densmap_kwds</span><span class="o">=</span><span class="n">densmap_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1210</span>         <span class="n">tqdm_kwds</span><span class="o">=</span><span class="n">tqdm_kwds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1211</span>         <span class="n">move_other</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1212</span>     <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1213</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1214</span>     <span class="n">embedding</span> <span class="o">=</span> <span class="n">optimize_layout_generic</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1215</span>         <span class="n">embedding</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1216</span>         <span class="n">embedding</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1232</span>         <span class="n">move_other</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1233</span>     <span class="p">)</span>
-
-<span class="nn">File ~/Library/Mobile Documents/com~apple~CloudDocs/Kurse/DLTA/.venv/lib/python3.11/site-packages/umap/layouts.py:380,</span> in <span class="ni">optimize_layout_euclidean</span><span class="nt">(head_embedding, tail_embedding, head, tail, n_epochs, n_vertices, epochs_per_sample, a, b, rng_state, gamma, initial_alpha, negative_sample_rate, parallel, verbose, densmap, densmap_kwds, tqdm_kwds, move_other)</span>
-<span class="g g-Whitespace">    </span><span class="mi">377</span>     <span class="n">dens_re_mean</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="g g-Whitespace">    </span><span class="mi">378</span>     <span class="n">dens_re_cov</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="ne">--&gt; </span><span class="mi">380</span> <span class="n">optimize_fn</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">381</span>     <span class="n">head_embedding</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">382</span>     <span class="n">tail_embedding</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">383</span>     <span class="n">head</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">384</span>     <span class="n">tail</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">385</span>     <span class="n">n_vertices</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">386</span>     <span class="n">epochs_per_sample</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">387</span>     <span class="n">a</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">388</span>     <span class="n">b</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">389</span>     <span class="n">rng_state</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">390</span>     <span class="n">gamma</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">391</span>     <span class="n">dim</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">392</span>     <span class="n">move_other</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">393</span>     <span class="n">alpha</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">394</span>     <span class="n">epochs_per_negative_sample</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">395</span>     <span class="n">epoch_of_next_negative_sample</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">396</span>     <span class="n">epoch_of_next_sample</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">397</span>     <span class="n">n</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">398</span>     <span class="n">densmap_flag</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">399</span>     <span class="n">dens_phi_sum</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">400</span>     <span class="n">dens_re_sum</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">401</span>     <span class="n">dens_re_cov</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">402</span>     <span class="n">dens_re_std</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">403</span>     <span class="n">dens_re_mean</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">404</span>     <span class="n">dens_lambda</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">405</span>     <span class="n">dens_R</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">406</span>     <span class="n">dens_mu</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">407</span>     <span class="n">dens_mu_tot</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">408</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">410</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">initial_alpha</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">)))</span>
-<span class="g g-Whitespace">    </span><span class="mi">412</span> <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_epochs</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../language_models/w2v_10K/dim_reducer_google.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train dimensionality reducer first...&quot;</span><span class="p">)</span>
+    <span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
+    <span class="n">rnd_idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">dim_reducer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">google_word_vectors</span><span class="p">[</span><span class="n">rnd_idx</span><span class="p">])</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../language_models/w2v_10K/dim_reducer_google.pkl&quot;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dim_reducer</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2225,7 +2110,31 @@ Pairwise cosine similarities:
 </div>
 </div>
 <div class="cell_output docutils container">
-</div>
+<div class="output text_html"><div>                            <div id="023d0424-fc7c-480c-a9e4-3cf786401e55" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("023d0424-fc7c-480c-a9e4-3cf786401e55")) {                    Plotly.newPlot(                        "023d0424-fc7c-480c-a9e4-3cf786401e55",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003ecategory=positive\u003cbr\u003eu1=%{x}\u003cbr\u003eu2=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["crises","turmoil","meltdown","credit_crunch","crisis.The","recession","downturn","subprime_mortgage_crisis","economic_downturn","liquidity_crunch","crisi","upheaval","turmoil_engulfing","crunch","calamity","contagion","malaise_gripping","upheavals","subprime_mortgage_meltdown","recesssion"],"legendgroup":"positive","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"positive","orientation":"v","showlegend":true,"x":[-1.5903878211975098,-1.8147861957550049,-1.8674094676971436,2.081277370452881,2.505577802658081,2.0978221893310547,2.164963960647583,2.179561138153076,2.034752368927002,2.6730542182922363,-3.283970832824707,-1.8826255798339844,-1.303049087524414,-0.43323224782943726,-0.3718012571334839,2.353806257247925,1.9350972175598145,-1.9647154808044434,2.09753680229187,2.272488594055176],"xaxis":"x","y":[-0.6514642834663391,-0.6408122777938843,-0.7730613350868225,-1.676458477973938,-1.4970511198043823,-1.7514894008636475,-1.7127748727798462,-1.8207685947418213,-1.7543390989303589,-1.5550376176834106,1.127601981163025,-0.7106509208679199,-0.49479925632476807,-0.771542489528656,-0.9434477686882019,-1.734410285949707,-1.6635717153549194,-0.6047559380531311,-1.767204761505127,-1.7013185024261475],"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003ecategory=negative\u003cbr\u003eu1=%{x}\u003cbr\u003eu2=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Fertittas","Susannah_Meadows","General_Yoshio_Utsumi","Kyonggi_Province","Mansheim","Macedonia_Nordonia","operator_Angkasa_Pura","Krambach","Outright_secular","Cook_Yourself_Thin","Ganira_Pashayeva","Peter_Whittall","BFGoodrich_Baja","Guernica_Picasso","Gumtree","striker_Stuart_Beavon","Daughter_Remembers","overbooked_flights","Tito_Massoud","Yong_Pyong","Phebra","Titlow","Info_www.tops.org","granola","Vladimir_Obradovic","Djang","----------_-----------------------------------------------_unaudited","ImageStation","Cerro_Grande","Auggie_Tantillo_executive","ROLL_OUT_THE","Combat_Infantryman_Badges","Thousand_Cranes","GREEN_PARTY","##M####","Toaff","Clake","Girbaud","Solotomo","Le_Cirque","Sven_Bruss","http:\u002f\u002fwww.avanquest.com","LI","Zeta_Ophiuchi","Patient_Monitoring_Market","Rekong_Peo","atopic_asthma","Ocitti","Zomi_Students_Federation","Cyngor","Alisha_Filmore","heat_exchanger_ruptured","Golden_Pin_Lanes","Jillie","Ti_Logistics_Briefing","Noor_Azam","BIAM_auditorium","Drapers_features","Anastazia_Kuzmina","Throne_Holst","Laura_Grevas_Worthington","mantling","WE_Thu","Steve_Chealander","TT_X_TRADER","Be_Exhumed","Picardi","Daejeon","Deluxe_Rooms","Franco_Prussian_War","ClearBlack_display","shampoo_contraceptives","Bukit_Payong","Deborah_Jeon","Raj_Thackerey","Sub_Swara","Quartermaster_Corps","Dichello_Distributors","Irawati","MCF####","Oquaye","SFA_disciplinary","GameZnFlix","Rube_Waddell","Sholom_Aleichem","Engagement_Rumors","wakame","LVDS_transmitter","director_Jesus_Puc","Athletic_Bilbao_Atletico_Madrid","Vijay_Kannan","Group_JSE_NED","Wellesley_Wenham_West","Don_DeFord","MAp_airports","fecal_coli","King_Athelstan","Jorge_Mario_Bergoglio","Tirumalasetti","Airbus_A###\u002fA###_aircraft"],"legendgroup":"negative","marker":{"color":"#EF553B","symbol":"circle"},"mode":"markers","name":"negative","orientation":"v","showlegend":true,"x":[-5.8580427169799805,-2.077059268951416,2.4640140533447266,4.110031604766846,-1.4486863613128662,-2.2361528873443604,0.04118053987622261,1.4323381185531616,-0.047604624181985855,-3.049020767211914,2.124901294708252,2.5108277797698975,2.058107614517212,-2.876023769378662,1.3507921695709229,1.1727486848831177,-3.2501320838928223,0.9170393347740173,1.6132543087005615,-0.9595350027084351,2.3678507804870605,-1.3790007829666138,-0.5660938620567322,-2.534123420715332,-1.8241679668426514,-0.6516602039337158,-3.570383310317993,1.4112991094589233,-0.9469077587127686,1.4808094501495361,-5.316225051879883,0.7767993211746216,-3.7519969940185547,-5.144285202026367,1.9330081939697266,1.4303635358810425,-0.337359756231308,-2.8904762268066406,4.285956382751465,-2.860912561416626,-3.2665467262268066,0.1853044182062149,-1.4849834442138672,0.24207021296024323,0.8614741563796997,4.106507301330566,-0.6508395671844482,3.679220676422119,3.646125316619873,-3.640573501586914,-2.712348222732544,-0.010967678390443325,-2.212578296661377,0.12257880717515945,-0.4142078161239624,3.434443473815918,3.546022891998291,-0.3516233265399933,-1.1133931875228882,-0.6347684860229492,-0.25266703963279724,4.252915859222412,-0.6882296800613403,1.029500126838684,1.4826428890228271,-1.0590462684631348,-1.5981513261795044,4.134159564971924,-1.6859256029129028,-2.520253896713257,1.5407218933105469,-0.35880494117736816,3.545494556427002,0.6011435389518738,3.7435457706451416,-4.522322654724121,0.9901484847068787,-2.4284615516662598,3.4847261905670166,1.9650932550430298,4.0727763175964355,1.2161574363708496,1.4997212886810303,-3.8053371906280518,-3.62764048576355,-3.017271041870117,-2.637610673904419,1.8126311302185059,0.32191556692123413,0.897588849067688,-0.22153340280056,-0.02303670533001423,-3.6789445877075195,-0.11698422580957413,1.9671709537506104,-0.7320964932441711,0.8872939944267273,-0.672980785369873,3.5756328105926514,2.244429588317871],"xaxis":"x","y":[2.2360615730285645,-3.8956265449523926,0.31205281615257263,-0.436418741941452,3.6579525470733643,4.679885387420654,1.8907470703125,3.315551280975342,-3.2971010208129883,-2.30322527885437,0.40998128056526184,-0.9180622100830078,-5.134786128997803,-1.0877021551132202,-2.7945895195007324,5.085261344909668,-1.5500527620315552,-1.211390495300293,1.040578842163086,5.4275078773498535,-3.4922728538513184,3.5689501762390137,-3.5562961101531982,-2.908074378967285,5.119876861572266,3.5819287300109863,-5.961701393127441,-5.473769664764404,-0.5620958805084229,-1.0219206809997559,-3.8725340366363525,-0.04399297758936882,-0.2781033217906952,-3.9984359741210938,-5.033262729644775,1.5101704597473145,4.019034385681152,-2.0076839923858643,-2.9260854721069336,-2.1381585597991943,2.7012522220611572,-3.3586080074310303,1.274094820022583,-3.939286470413208,-2.833949089050293,2.1614108085632324,-5.197898864746094,1.2605315446853638,2.229107618331909,1.046242356300354,5.164920806884766,-4.286358833312988,2.986729145050049,3.5837044715881348,-2.809447765350342,0.6469981074333191,2.3771426677703857,-2.1124653816223145,5.521768569946289,1.8938299417495728,-2.0797653198242188,-3.204502582550049,-2.383009672164917,-0.6194385886192322,-4.380722999572754,-1.2254209518432617,3.126810073852539,-0.464685320854187,0.12102632224559784,0.025358401238918304,-5.550379276275635,-4.787944793701172,0.5400874018669128,0.7130979895591736,2.456486940383911,-0.30760112404823303,0.0651244968175888,-1.5110564231872559,2.9367713928222656,-5.007051944732666,1.1636595726013184,5.223416805267334,-3.5934505462646484,5.467677116394043,-0.7715775966644287,-1.4788858890533447,-2.9194576740264893,-5.202212333679199,0.18609902262687683,5.5823259353637695,5.692834854125977,-1.9844611883163452,-4.110686302185059,1.4968429803848267,-1.3385316133499146,-4.446314334869385,2.821531057357788,-0.13109758496284485,2.884629726409912,-4.486927032470703],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"u1"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u2"}},"legend":{"title":{"text":"category"},"tracegroupgap":0},"title":{"text":"Similar and random words for the word: crisis in 2D"},"height":600,"width":800},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('023d0424-fc7c-480c-a9e4-3cf786401e55');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div></div></div>
 </div>
 </section>
 <section id="performance-evaluation-for-word2vec-models">
@@ -2455,16 +2364,49 @@ Pairwise cosine similarities:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">umap</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 
-<span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
-<span class="n">dim_reducer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">word_vectors</span><span class="o">.</span><span class="n">get_normed_vectors</span><span class="p">())</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../language_models/w2v_10K/dim_reducer_10K.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train dimensionality reducer first...&quot;</span><span class="p">)</span>
+    <span class="n">dim_reducer</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)</span>
+    <span class="n">dim_reducer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">word_vectors</span><span class="o">.</span><span class="n">get_normed_vectors</span><span class="p">())</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../language_models/w2v_10K/dim_reducer_10K.pkl&quot;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dim_reducer</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plot_similar_words_2d</span><span class="p">(</span><span class="s2">&quot;crisis&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">word_vectors</span><span class="p">,</span> <span class="n">dim_reducer</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-</div>
+<div class="output text_html"><div>                            <div id="9e14864b-2cec-4829-8ade-33480e29df71" class="plotly-graph-div" style="height:600px; width:800px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("9e14864b-2cec-4829-8ade-33480e29df71")) {                    Plotly.newPlot(                        "9e14864b-2cec-4829-8ade-33480e29df71",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003ecategory=positive\u003cbr\u003eu1=%{x}\u003cbr\u003eu2=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["turmoil","recession","crises","downturn","pandemic","covid","slowdown","unprecedented","tightening","outbreak","economy","recessionary","lingering","macroeconomic","deteriorating","instability","worsening","coronavirus","dislocation","dislocations"],"legendgroup":"positive","marker":{"color":"#636efa","symbol":"circle"},"mode":"markers","name":"positive","orientation":"v","showlegend":true,"x":[10.790986061096191,10.783539772033691,10.788851737976074,10.846534729003906,10.883024215698242,10.878865242004395,10.849903106689453,10.887566566467285,10.856961250305176,10.89128589630127,10.779173851013184,10.868610382080078,10.864794731140137,10.77324390411377,10.82967472076416,10.659704208374023,10.850300788879395,10.924117088317871,10.853039741516113,10.804326057434082],"xaxis":"x","y":[10.560967445373535,10.412466049194336,10.76085090637207,10.457297325134277,10.723649024963379,10.667241096496582,10.378545761108398,10.39615249633789,10.39222240447998,10.754632949829102,10.403023719787598,10.375840187072754,10.321242332458496,10.330520629882812,10.379115104675293,10.77676773071289,10.318373680114746,10.719046592712402,10.40966796875,10.45414924621582],"yaxis":"y","type":"scatter"},{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003ecategory=negative\u003cbr\u003eu1=%{x}\u003cbr\u003eu2=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["sched","ugas","collectibles","salle","plers","disagreed","biod","dpler","recruitment","ldr","umber","nys","reinsurers","finisar","amune","golub","adata","galileo","originators","maidstone","slee","partners","brazing","usgovernmentsponsoredenterprises","constric","omniab","shortfalls","starting","serviceable","beings","hur","verastem","shenandoah","rox","ndc","trapped","dissol","gassegmentmember","sior","vpc","constructionandlanddevelopment","kog","arena","lihood","cyx","lomb","lucer","insec","coalmember","oncor","resolved","eco","nuo","pressur","lloy","docsis","filippo","acbb","unlocking","endow","certiorari","apu","abatements","stranded","administrator","strath","ogen","seriesofindividuallyimmaterial","risperidone","tv","hne","eafe","talis","vontier","verint","pwc","oradur","majo","rated","classb","mccrea","bux","lf","correction","resem","ameh","albu","wich","confirmations","part","graduate","adversaries","foss","championships","occi","gmac","sellers","behavi","veneers","asct"],"legendgroup":"negative","marker":{"color":"#EF553B","symbol":"circle"},"mode":"markers","name":"negative","orientation":"v","showlegend":true,"x":[10.36625862121582,6.90705680847168,9.962209701538086,8.58720588684082,12.201512336730957,8.844587326049805,14.700787544250488,8.3587007522583,9.705876350402832,13.36216926574707,9.157753944396973,7.485684394836426,7.354035377502441,9.94594955444336,14.639772415161133,8.15824031829834,10.289405822753906,10.531097412109375,7.39816427230835,9.057162284851074,11.57755184173584,8.431594848632812,12.561229705810547,2.948759078979492,11.050801277160645,9.056119918823242,10.431573867797852,8.938079833984375,11.062554359436035,13.052919387817383,10.541491508483887,9.036066055297852,8.828150749206543,11.589736938476562,9.612335205078125,12.676424026489258,13.110757827758789,3.392247200012207,9.59835147857666,10.983986854553223,2.730250120162964,11.094597816467285,10.135476112365723,10.638731002807617,5.9227471351623535,9.539722442626953,5.557521820068359,6.085728645324707,3.0499472618103027,8.336054801940918,8.911270141601562,10.730208396911621,12.36845874786377,12.559844970703125,1.4006786346435547,10.576399803161621,9.561532020568848,2.422959566116333,10.657953262329102,12.982645034790039,8.677228927612305,11.145583152770996,8.296561241149902,13.465600967407227,7.909313678741455,9.219758987426758,12.90625286102295,2.85237455368042,14.471007347106934,9.982540130615234,10.335028648376465,7.047996997833252,10.682190895080566,9.139022827148438,10.210858345031738,11.521745681762695,14.553854942321777,9.753885269165039,6.798972129821777,1.7060900926589966,10.15604305267334,10.19534683227539,10.812043190002441,12.549461364746094,12.146957397460938,1.9339274168014526,14.364387512207031,9.031527519226074,9.355246543884277,7.709567546844482,9.34371566772461,10.182602882385254,10.639662742614746,10.120336532592773,7.621611595153809,7.416634559631348,8.217612266540527,10.907075881958008,12.620180130004883,14.805536270141602],"xaxis":"x","y":[7.330929756164551,6.9564642906188965,6.838043212890625,2.3121256828308105,7.512179851531982,11.010652542114258,7.326013088226318,5.851406574249268,8.429370880126953,7.496510028839111,1.6694085597991943,7.432206630706787,6.841859817504883,4.565352439880371,7.548014163970947,4.917514324188232,5.383837699890137,5.012768268585205,7.985795974731445,1.0510344505310059,7.146239280700684,8.389997482299805,6.445796489715576,5.796187400817871,10.272407531738281,4.235781669616699,10.301979064941406,9.906658172607422,7.7455058097839355,8.566817283630371,1.2032915353775024,4.078641891479492,1.9059463739395142,3.6062636375427246,5.431286811828613,7.431703090667725,6.756343364715576,4.68349027633667,0.3570334017276764,5.724638938903809,6.529166221618652,1.358242154121399,8.752399444580078,8.536224365234375,4.155100345611572,3.842951774597168,3.5606555938720703,4.069753646850586,4.531293869018555,5.894660949707031,11.103867530822754,4.664908409118652,2.258026361465454,6.887904644012451,4.784842014312744,6.350083351135254,0.2760376036167145,5.967092037200928,8.965289115905762,7.312598705291748,11.097002029418945,5.7357258796691895,8.57426929473877,8.068317413330078,8.044404983520508,1.5648539066314697,6.692939281463623,4.7084126472473145,7.338740825653076,6.351436614990234,0.6733285784721375,7.222217082977295,4.7996110916137695,4.70176887512207,5.278097152709961,0.5575405955314636,7.233043193817139,2.8526313304901123,7.238946437835693,4.98820686340332,0.31117039918899536,0.9297837615013123,4.218409538269043,8.066849708557129,8.535470962524414,4.3474555015563965,7.382046222686768,1.8959938287734985,8.821266174316406,10.104193687438965,7.300842761993408,11.2191801071167,1.4196616411209106,6.267421245574951,3.4470622539520264,5.262706756591797,8.04916763305664,8.889338493347168,6.042911052703857,8.166638374328613],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"u1"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"u2"}},"legend":{"title":{"text":"category"},"tracegroupgap":0},"title":{"text":"Similar and random words for the word: crisis in 2D"},"height":600,"width":800},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('9e14864b-2cec-4829-8ade-33480e29df71');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div></div></div>
 </div>
 <p>This can also be a coinsidence, however, the similar words are closer to each other than in comparison to the Google News model.</p>
 </section>
@@ -2513,6 +2455,15 @@ Pairwise cosine similarities:
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Neural networks</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="05_document_embeddings.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Document embeddings with Doc2Vec</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

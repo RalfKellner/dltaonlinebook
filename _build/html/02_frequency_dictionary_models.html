@@ -174,6 +174,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Model free text analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_neural_networks.html">Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_word_embeddings.html">Word embeddings with Word2Vec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_document_embeddings.html">Document embeddings with Doc2Vec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_transformer.html">Attention!</a></li>
 </ul>
 
     </div>
@@ -1603,38 +1605,38 @@ tf-idf =  tf_{ij} \cdot id_j
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Examples for the category: negative
 --------------------------------------------------
-[&#39;nonfunctional&#39; &#39;obstacles&#39; &#39;oversupplies&#39; &#39;seriousness&#39; &#39;rejected&#39;
- &#39;correction&#39; &#39;renegotiation&#39; &#39;offend&#39; &#39;cancelled&#39; &#39;racketeer&#39;]
+[&#39;confront&#39; &#39;litigants&#39; &#39;downsizings&#39; &#39;discrepancies&#39; &#39;bail&#39;
+ &#39;countermeasure&#39; &#39;exposes&#39; &#39;restructurings&#39; &#39;worst&#39; &#39;misjudgments&#39;]
 --------------------------------------------------
 Examples for the category: positive
 --------------------------------------------------
-[&#39;benefiting&#39; &#39;greatest&#39; &#39;beautifully&#39; &#39;advantageously&#39; &#39;progress&#39; &#39;enjoy&#39;
- &#39;inventors&#39; &#39;gains&#39; &#39;compliment&#39; &#39;alliances&#39;]
+[&#39;enhances&#39; &#39;attainments&#39; &#39;exclusiveness&#39; &#39;courteous&#39; &#39;distinctive&#39;
+ &#39;exclusive&#39; &#39;stabilize&#39; &#39;compliments&#39; &#39;plentiful&#39; &#39;desirable&#39;]
 --------------------------------------------------
 Examples for the category: uncertainty
 --------------------------------------------------
-[&#39;deviation&#39; &#39;possibilities&#39; &#39;unforecasted&#39; &#39;vaguest&#39; &#39;reconsider&#39;
- &#39;reconsiders&#39; &#39;anticipations&#39; &#39;confusion&#39; &#39;undecided&#39; &#39;presumed&#39;]
+[&#39;undocumented&#39; &#39;apparently&#39; &#39;random&#39; &#39;depended&#39; &#39;maybe&#39; &#39;alterations&#39;
+ &#39;probabilities&#39; &#39;might&#39; &#39;crossroads&#39; &#39;approximates&#39;]
 --------------------------------------------------
 Examples for the category: litigious
 --------------------------------------------------
-[&#39;thenceforward&#39; &#39;fide&#39; &#39;regulator&#39; &#39;arrearages&#39; &#39;lawsuit&#39; &#39;rebut&#39;
- &#39;promulgations&#39; &#39;wilful&#39; &#39;claimable&#39; &#39;nonguarantor&#39;]
+[&#39;justice&#39; &#39;viatical&#39; &#39;interposed&#39; &#39;ratable&#39; &#39;executrices&#39; &#39;appurtenant&#39;
+ &#39;writs&#39; &#39;warrantor&#39; &#39;pleading&#39; &#39;notwithstanding&#39;]
 --------------------------------------------------
 Examples for the category: strong_modal
 --------------------------------------------------
-[&#39;unequivocal&#39; &#39;unambiguously&#39; &#39;undoubtedly&#39; &#39;strongly&#39; &#39;definitively&#39;
- &#39;highest&#39; &#39;never&#39; &#39;will&#39; &#39;clearly&#39; &#39;must&#39;]
+[&#39;unequivocal&#39; &#39;never&#39; &#39;always&#39; &#39;undoubtedly&#39; &#39;unsurpassed&#39; &#39;unparalleled&#39;
+ &#39;lowest&#39; &#39;highest&#39; &#39;must&#39; &#39;definitively&#39;]
 --------------------------------------------------
 Examples for the category: weak_modal
 --------------------------------------------------
-[&#39;suggest&#39; &#39;possible&#39; &#39;could&#39; &#39;depend&#39; &#39;perhaps&#39; &#39;appears&#39; &#39;almost&#39;
- &#39;depending&#39; &#39;conceivable&#39; &#39;depended&#39;]
+[&#39;possible&#39; &#39;appearing&#39; &#39;somewhat&#39; &#39;perhaps&#39; &#39;appeared&#39; &#39;uncertainly&#39;
+ &#39;suggests&#39; &#39;sometimes&#39; &#39;nearly&#39; &#39;occasionally&#39;]
 --------------------------------------------------
 Examples for the category: constraining
 --------------------------------------------------
-[&#39;directive&#39; &#39;confine&#39; &#39;prohibition&#39; &#39;dictating&#39; &#39;restrictive&#39; &#39;imposes&#39;
- &#39;noncancelable&#39; &#39;required&#39; &#39;stricter&#39; &#39;manditorily&#39;]
+[&#39;directive&#39; &#39;escrows&#39; &#39;required&#39; &#39;refrains&#39; &#39;manditorily&#39; &#39;mandated&#39;
+ &#39;prohibitive&#39; &#39;irrevocable&#39; &#39;confines&#39; &#39;requiring&#39;]
 --------------------------------------------------
 </pre></div>
 </div>
@@ -1786,11 +1788,11 @@ d_{cosine} (\boldsymbol{x}_i, \boldsymbol{x}_{k}) = \frac{\sum_{j = 1}^d  x_{ij}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average euclidean distance is: 0.5309
-The average cosine distance is: 0.1651
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average euclidean distance is: 0.5288
+The average cosine distance is: 0.1652
 </pre></div>
 </div>
-<img alt="_images/59f7dc2dc3a9b6a45beb7395ddc3ec9f7b5adf3bb7e8114b3f59b7bb785fa06c.png" src="_images/59f7dc2dc3a9b6a45beb7395ddc3ec9f7b5adf3bb7e8114b3f59b7bb785fa06c.png" />
+<img alt="_images/10a0256fe14822f959b8aae34da46167e8ff1460a8b9ac7f92cab749e7de6732.png" src="_images/10a0256fe14822f959b8aae34da46167e8ff1460a8b9ac7f92cab749e7de6732.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1813,11 +1815,11 @@ The average cosine distance is: 0.1651
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average euclidean distance is: 0.6657
-The average cosine distance is: 0.1971
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The average euclidean distance is: 0.6653
+The average cosine distance is: 0.1921
 </pre></div>
 </div>
-<img alt="_images/2d0e145c7594b9e052abdc08fc5da1474623eafa8af7c32b51ca79f479d21923.png" src="_images/2d0e145c7594b9e052abdc08fc5da1474623eafa8af7c32b51ca79f479d21923.png" />
+<img alt="_images/c2f7b3c16e4487aa025ea20c67d5892ecd564f4494461ec8e6fe03d687630bce.png" src="_images/c2f7b3c16e4487aa025ea20c67d5892ecd564f4494461ec8e6fe03d687630bce.png" />
 </div>
 </div>
 <p>Now let us take a look, this the average distances behave for an increasing number of dimensions. The cell below exhibits the distance distributions for <span class="math notranslate nohighlight">\(d = 10, 100, 1000\)</span>. We observe that distributions are shifted to the right for pairwise euclidean distances which means they increase simply because we increase dimensionality. The cosine distances stay on average at the same level, but, become less diverse with increasing dimensionality. Does this mean that cosine similariy is not prone to the fallacies of the curse of dimensionality?</p>
@@ -1850,7 +1852,7 @@ The average cosine distance is: 0.1971
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/d77c441ce885c1e71d34367f472387a1b16133b7e8363d15338ef7e7e73c736a.png" src="_images/d77c441ce885c1e71d34367f472387a1b16133b7e8363d15338ef7e7e73c736a.png" />
+<img alt="_images/7a9d83ab5fba7af7ab2c1eec36cb7e45c5693934950ec4b38865c175c160a5c4.png" src="_images/7a9d83ab5fba7af7ab2c1eec36cb7e45c5693934950ec4b38865c175c160a5c4.png" />
 </div>
 </div>
 <p>Unfortunately not in general! Take a look a look at the cell below for which we now sample observations in <span class="math notranslate nohighlight">\([-1, 1]^d\)</span>.</p>
@@ -1883,7 +1885,7 @@ The average cosine distance is: 0.1971
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/845272df484d6b2ded983338d888adc398ba041a85ea16affc8b219531e66d50.png" src="_images/845272df484d6b2ded983338d888adc398ba041a85ea16affc8b219531e66d50.png" />
+<img alt="_images/b61f11f2a32f0104a8862e14f08278f0397ec05ffcecd11175a5b8f11f417821.png" src="_images/b61f11f2a32f0104a8862e14f08278f0397ec05ffcecd11175a5b8f11f417821.png" />
 </div>
 </div>
 <p>Remember that cosine distance is <span class="math notranslate nohighlight">\( 1 - d_{cosine} (\boldsymbol{x}_i, \boldsymbol{x}_{k})\)</span>, this means that an average value of it being equal to <span class="math notranslate nohighlight">\(1\)</span> implies average similarities of <span class="math notranslate nohighlight">\(0\)</span>. Thus, for higher dimension, vectors are independent of each other. Let us end the experiment here. What you should take away from it is that measuring similarities can become challenging if we use high dimensional vectors for the numerical representation of words and documents. Thus, sometimes we may need to bring high-dimensional representations back to lower dimensions by making use of dimensionality reduction techniques as principal component analysis (PCA), t-distributed neighbor embedding (t-sne) or unifold manifold approximation and projection (umap).</p>
